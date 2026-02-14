@@ -1,0 +1,32 @@
+# Security & Privacy
+.env
+.env.*
+!.env.example
+auth-profiles.json
+*.key
+*.pem
+*.log
+id_rsa
+id_rsa.pub
+
+# Private Directories
+memory/
+private/
+03-Strategy/
+06-Life/
+backup/
+tmp/
+
+# OS & Editor
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Node
+node_modules/
+npm-debug.log
+
+# OpenClaw Specific
+openclaw.pid
+openclaw.sock
