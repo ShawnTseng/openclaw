@@ -16,6 +16,12 @@ private/
 06-Life/
 backup/
 tmp/
+daily-diary/
+
+# Sensitive Root Files
+USER.md
+MEMORY.md
+Shawn.md
 
 # OS & Editor
 .DS_Store
