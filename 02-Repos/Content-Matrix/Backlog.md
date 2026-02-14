@@ -18,7 +18,7 @@
 ---
 
 ## 📝 In Progress
-- (None)
+- [x] **001 — How I Built a Digital Twin with OpenClaw** → [`Drafts/001-digital-twin-openclaw.md`](Drafts/001-digital-twin-openclaw.md)
 
 ## ✅ Published
 - (None)

@@ -35,3 +35,18 @@
 - **Phase 1:** Setup Repo & Strategy (Done).
 - **Phase 2:** Manual Generation (Test quality).
 - **Phase 3:** Automated Trend Watching (Cron jobs).
+
+---
+
+## 📅 Automation (Cron Jobs)
+
+| Job | Schedule | Purpose |
+|-----|----------|---------|
+| **Weekly Content Refinement** | Sat 20:00 | Extract best insight from week's diaries → Draft blog post |
+
+## 🌐 Platform Strategy
+
+**Dual-Track Publishing:**
+- **Medium:** Primary distribution (SEO + Partner Program revenue)
+- **Hugo (GitHub Pages):** Self-hosted mirror (brand ownership + AdSense)
+- **LinkedIn:** Cross-post summaries (professional network growth)
