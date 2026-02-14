@@ -6,24 +6,30 @@
 
 ---
 
-## 🗺️ Life Ops Map (戰略地圖)
+## 🗺️ Life Ops Map (Strategy)
 
 ### 1. High-Margin Business (Pivot)
-- **Concept:** 從「賣 SaaS 工具」轉向「賣業務結果 (Results)」。
+- **Concept:** Shift from "SaaS Tools" to "Business Results".
 - **Document:** [`03-Life-Ops/Financial-Independence/High-Margin-Business-Models.md`](../03-Life-Ops/Financial-Independence/High-Margin-Business-Models.md)
 - **Key Directions:**
-  - **A. LocalRAG (企業私有):** 律師/會計師/傳產 (NT$150K setup).
-  - **B. AI SDR (垂直領域):** 房仲/保險/醫美 (成交分潤 5-10%).
-  - **C. Content Matrix (流量矩陣):** 自動化自媒體 (Zero Client).
+  - **A. LocalRAG (Enterprise):** Law/Accounting/Mfg (NT$150K setup).
+  - **B. AI SDR (Vertical):** Real Estate/Insurance (Commission 5-10%).
+  - **C. Content Matrix (Traffic):** Automated Media (Zero Client).
 
-### 2. Career & Global Move (人生戰略)
+### 2. Career & Global Move (Life Strategy)
 - **Goal:** Australia Senior .NET Consultant / AI Architect.
 - **Deadline:** 2026-06-05 (Partner Visa Application).
-- **Portfolio Strategy:** Use this GitHub Repo (`ShawnTseng/openclaw`) as a live showcase of AI orchestration skills.
+- **Portfolio Strategy:** Use this GitHub Repo (`ShawnTseng/openclaw`) as a live showcase.
+
+### 3. Personal Infrastructure (Cloud & Data)
+- **Photo Migration:** Completed 2026-02-12 (1,348 files, 16GB).
+  - **Storage:** Google Drive `Photos Archive/`.
+  - **Strategy:** iCloud for recent 12mo; GDrive for long-term archive.
+- **Data Sovereignty:** Moving away from reliance on Big Tech ecosystems where possible.
 
 ---
 
-## 🏗️ Active Repos (進行中專案)
+## 🏗️ Active Repos (Projects)
 
 | Repo | Status | Next Action |
 | :--- | :--- | :--- |
@@ -34,7 +40,7 @@
 
 ---
 
-## 🤖 Infrastructure (數位分身架構)
+## 🤖 Infrastructure (Digital Twin)
 
 ### 1. The Brain (Models)
 - **Reasoning:** Google Antigravity (Gemini 3 Pro High) - *Primary Thinker*.
@@ -52,7 +58,7 @@
 
 ---
 
-## ✅ Master Todo List (待辦總覽)
+## ✅ Master Todo List
 
 ### Immediate (Post-CNY)
 - [ ] **mrvshop:** Finish deployment & collect deposit.
