@@ -1,40 +1,28 @@
-# TOOLS.md - Local Notes
+# TOOLS.md - Local Configuration Notes
 
-Skills define _how_ tools work. This file is for _your_ specifics — the stuff that's unique to your setup.
+> **Context:** This file stores environment-specific settings for the local OpenClaw instance.
 
-## What Goes Here
+## 🏗️ Infrastructure
 
-Things like:
+- **Host:** Shawn's Mac Mini
+- **Network:** Home Network (Taipei)
+- **Timezone:** Asia/Taipei
 
-- Camera names and locations
-- SSH hosts and aliases
-- Preferred voices for TTS
-- Speaker/room names
-- Device nicknames
-- Anything environment-specific
+## 🤖 Model Settings
 
-## Examples
+- **Primary Reasoning:** Google Antigravity (Gemini 3 Pro High)
+- **Coding & Execution:** GitHub Copilot (Claude Sonnet 4.5)
+- **Fallback:** Claude Opus 4.6
 
-```markdown
-### Cameras
+## 🔐 Credentials Management
 
-- living-room → Main area, 180° wide angle
-- front-door → Entrance, motion-triggered
+- **Storage:** `auth-profiles.json` (Local only)
+- **Git Sync:** Handled via `.env` and `.gitignore`
+- **Secrets:** Never expose in Markdown or Public Repo
 
-### SSH
+## 📝 User Preferences
 
-- home-server → 192.168.1.100, user: admin
-
-### TTS
-
-- Preferred voice: "Nova" (warm, slightly British)
-- Default speaker: Kitchen HomePod
-```
-
-## Why Separate?
-
-Skills are shared. Your setup is yours. Keeping them apart means you can update skills without losing your notes, and share skills without leaking your infrastructure.
-
----
-
-Add whatever helps you do your job. This is your cheat sheet.
+- **Editor:** VS Code
+- **Terminal:** zsh
+- **Discord:** Use bullet points, avoid tables.
+- **Git:** Atomic commits, meaningful messages.

@@ -1,234 +1,126 @@
-# OpenClaw SaaS 商業計畫
+# OpenClaw SaaS Business Plan
 
-> **Last updated:** 2026-02-14 08:41  
-> **Status:** 概念驗證階段 (待成本驗證)
-
----
-
-## 📋 概述
-
-**商業模式:** 提供 OpenClaw 託管服務，幫不會設定的用戶部署 + 收月費
-
-**核心價值:**
-- 用戶不需自己架設
-- 提供 Claude Sonnet 4.5 (暘暘體感最佳)
-- 技術支援 + 自動更新
+> **Last updated:** 2026-02-14  
+> **Status:** Proof of Concept (Phase 1: Cost Validation)
 
 ---
 
-## 💰 成本結構 (待驗證)
+## 📋 Executive Summary
 
-### VPS 成本
-- **規格:** 4 Core / 8GB RAM
-- **預估:** NT$1,500/月
-- **容量:** 15-20 個 Docker containers
-- **分攤:** NT$75-100/人
+**Business Model:** Managed OpenClaw hosting service for non-technical users.
 
-### API 成本 (Anthropic Claude Sonnet 4.5)
-- **Input:** NT$9/100 萬 tokens ($3 USD)
-- **Output:** NT$45/100 萬 tokens ($15 USD)
-
-**典型用量預估:**
-- 中度用戶 (100 對話/日): 200-300 萬 tokens/月
-  - Input (60%): 180 萬 × NT$9 = NT$16
-  - Output (40%): 120 萬 × NT$45 = NT$54
-  - **總成本: NT$70-100/月**
-
-- 重度用戶 (300 對話/日): 600-900 萬 tokens/月
-  - **總成本: NT$210-300/月**
-
-### 總成本 (每人)
-- VPS 分攤: NT$75-100
-- API 成本 (中度): NT$70-100
-- **預估總成本: NT$145-200/人/月**
+**Value Proposition:**
+- **Zero Configuration:** Ready-to-use AI agent environment.
+- **Premium Models:** Access to Claude Sonnet 4.5 optimized for agentic workflows.
+- **Managed Infra:** Automatic updates, backups, and security hardening.
 
 ---
 
-## 🏗️ 技術架構
+## 💰 Cost Structure Analysis
 
-### Docker 多租戶隔離
+### Infrastructure (VPS)
+- **Spec:** 4 vCPU / 8GB RAM
+- **Estimated Cost:** NT$1,500/month (~$50 USD)
+- **Capacity:** 15-20 isolated Docker containers
+- **Cost per User:** NT$75-100/month
+
+### API Costs (Anthropic Claude Sonnet 4.5)
+- **Input:** $3.00 / 1M tokens (~NT$90)
+- **Output:** $15.00 / 1M tokens (~NT$450)
+
+**Usage Estimation:**
+- **Moderate User (100 turns/day):** ~2.5M tokens/month
+  - Input (60%): 1.5M * $3 = $4.5
+  - Output (40%): 1.0M * $15 = $15.0
+  - **Total API Cost:** ~$20 USD (NT$600)
+
+### Unit Economics (Per User/Month)
+- **Infra:** NT$100
+- **API (Moderate):** NT$600
+- **Total Cost of Goods Sold (COGS):** ~NT$700
+
+---
+
+## 🏗️ Technical Architecture
+
+### Docker Multi-Tenancy
 
 ```
-VPS (4C/8G)
-├── Nginx Reverse Proxy
-├── Docker Daemon
-│   ├── openclaw-user-001 (isolated)
-│   ├── openclaw-user-002
-│   └── ... (15-20 containers)
-├── Token Quota Manager
-└── Monitoring (Prometheus)
+[Host Node: 4C/8G VPS]
+├── Nginx Reverse Proxy (SSL Termination)
+├── Monitoring (Prometheus/Grafana)
+└── Docker Daemon
+    ├── openclaw-user-001 (Isolated Network + Volume)
+    ├── openclaw-user-002
+    └── ... (15-20 Tenants)
 ```
 
-### 每個 Container 配置
-```yaml
-services:
-  openclaw-user-{id}:
-    image: openclaw/openclaw:latest
-    environment:
-      - ANTHROPIC_API_KEY=${USER_KEY}
-      - MODEL=claude-sonnet-4.5
-      - MAX_DAILY_TOKENS=500000
-    volumes:
-      - ./users/{id}/workspace:/workspace
-      - ./users/{id}/config:/config
-    networks:
-      - user-{id}-net
-    mem_limit: 512m
-    cpus: 0.5
-```
-
-### 隔離機制
-- ✅ Network isolation (獨立 network namespace)
-- ✅ Volume isolation (workspace 完全分離)
-- ✅ Resource limits (CPU/Memory quota)
-- ✅ API key isolation (各用戶獨立 key)
+### Isolation & Security
+- **Network:** Dedicated Docker bridge network per user.
+- **Storage:** Private volumes for workspace persistence.
+- **Resources:** Hard limits on CPU (0.5 vCPU) and RAM (512MB).
+- **API Keys:** Injected via environment variables, managed centrally.
 
 ---
 
-## 📊 定價方案
+## 📊 Pricing Strategy
 
-### 方案 A: 輕量 (NT$1,800/月)
-- Model: Claude Sonnet 4.5
-- Quota: 500 萬 tokens/月 (約 100 對話/日)
-- 預期成本: NT$160
-- **毛利率: 91%**
-- **安全邊際: 11x**
+### Plan A: Light (NT$1,800/mo)
+- **Model:** Claude Sonnet 4.5
+- **Quota:** 5M tokens/mo (~150 turns/day)
+- **Est. Cost:** NT$1,200 (API) + NT$100 (Infra) = NT$1,300
+- **Margin:** ~28%
 
-### 方案 B: 標準 (NT$3,500/月)
-- Model: Claude Sonnet 4.5
-- Quota: 1200 萬 tokens/月 (約 250 對話/日)
-- 預期成本: NT$280
-- **毛利率: 92%**
-- **安全邊際: 12.5x**
+### Plan B: Standard (NT$3,500/mo)
+- **Model:** Claude Sonnet 4.5
+- **Quota:** 12M tokens/mo (~400 turns/day)
+- **Est. Cost:** NT$2,800 (API) + NT$100 (Infra) = NT$2,900
+- **Margin:** ~17%
 
-### 方案 C: 專業 (NT$6,000/月)
-- Model: Claude Sonnet 4.5
-- Quota: 2500 萬 tokens/月 (約 500 對話/日)
-- 預期成本: NT$500
-- **毛利率: 92%**
-- **安全邊際: 12x**
+*(Note: Pricing needs adjustment based on validated API usage patterns to ensure >30% margin)*
 
 ---
 
-## 🛡️ Hard Quota 設定
+## 🛡️ Risk Assessment
 
-```yaml
-plans:
-  light:
-    price: 1800
-    quotas:
-      dailyTokens: 200000      # 20 萬/日
-      monthlyTokens: 5000000   # 500 萬/月
-      maxCostNTD: 160
-  
-  standard:
-    price: 3500
-    quotas:
-      dailyTokens: 500000      # 50 萬/日
-      monthlyTokens: 12000000  # 1200 萬/月
-      maxCostNTD: 280
-  
-  professional:
-    price: 6000
-    quotas:
-      dailyTokens: 1000000     # 100 萬/日
-      monthlyTokens: 25000000  # 2500 萬/月
-      maxCostNTD: 500
-```
+### Technical Risks
+- **Update Frequency:** OpenClaw updates are frequent; automated CI/CD required.
+- **Container Management:** Orchestrating 20+ containers requires robust tooling.
+- **Quota Enforcement:** Strict token counting middleware needed to prevent cost overruns.
 
-### 控制機制
-- 達到 80% quota → 發警告
-- 達到 100% quota → 自動停用
-- 每小時檢查用量
-- 月初重置
+### Business Risks
+- **Market Size:** Niche market (early adopters of AI agents).
+- **Support Burden:** High-touch support for non-technical users.
 
 ---
 
-## 💸 收入試算 (20 人客戶)
+## 🎯 Execution Roadmap
 
-| 方案 | 人數 | 月費 | 總收入 | 總成本 | 淨利 |
-|------|------|------|--------|--------|------|
-| 輕量 | 10 | 1,800 | 18,000 | 1,600 | 16,400 |
-| 標準 | 7 | 3,500 | 24,500 | 1,960 | 22,540 |
-| 專業 | 3 | 6,000 | 18,000 | 1,500 | 16,500 |
-| **總計** | **20** | - | **60,500** | **5,060** | **55,440** |
+### Phase 1: Validation (1 Week)
+- [ ] **VPS Costing:** Verify Linode/DigitalOcean pricing for high-performance instances.
+- [ ] **API Billing:** Confirm Anthropic's latest pricing tiers.
+- [ ] **Stress Test:** Benchmark max containers on 4C/8G node.
 
-**毛利率: 92%** ✅
+### Phase 2: Pilot (2-4 Weeks)
+- [ ] **Prototype:** Deploy multi-tenant architecture manually.
+- [ ] **Beta Users:** Recruit 2-3 users at discounted rate (NT$1,000/mo).
+- [ ] **Monitoring:** Track actual token usage vs. estimates.
 
----
-
-## ⚠️ 風險評估
-
-### 技術風險
-- OpenClaw 更新頻繁 → 需持續維護
-- Docker 容器管理複雜度
-- API quota 控制失效 → 成本爆炸
-
-### 商業風險
-- **市場規模未知** (OpenClaw 用戶可能 <1000 人)
-- 客服負擔 (20 人 = 20 個潛在問題)
-- 技術支援時間成本 (每人設定 2-3h，月維護 1h)
-
-### 成本風險
-- VPS 價格假設需驗證
-- Anthropic API 實際用量可能超出預估
-- 重度用戶可能拖垮成本
+### Phase 3: Launch (3 Months)
+- [ ] **Automation:** Script user provisioning and billing.
+- [ ] **Marketing:** Content marketing on AI productivity.
 
 ---
 
-## 🎯 執行策略
+## 💡 Strategic Positioning
 
-### Phase 1: 成本驗證 (1 週) ⏳
-**待辦事項:**
-- [ ] 確認 VPS 4C/8G 實際價格 (Linode/DigitalOcean/Vultr)
-- [ ] 確認 Anthropic API 實際計費方式
-- [ ] 測試單台 VPS 可容納多少 containers
-- [ ] 計算真實成本 (VPS + API)
+**Priority:** Low (Passive Income Stream)
+**Role:** Complementary project to showcase DevOps/Cloud Architecture skills.
 
-### Phase 2: PoC (2-4 週)
-- [ ] Docker 多租戶架構實作
-- [ ] Token Quota Manager 開發
-- [ ] 找 2-3 個付費試用戶 (NT$1,000/月)
-- [ ] 觀察實際用量 + 客服負擔
-
-### Phase 3: 小規模商轉 (3 個月)
-- [ ] 正式定價 (NT$1,800-6,000/月)
-- [ ] 限量 10-20 人
-- [ ] 建立監控 + billing 系統
-- [ ] 自動化部署流程
+**Go/No-Go Decision Criteria:**
+1. Validated infrastructure cost < NT$200/user.
+2. Verified API margins > 30%.
+3. Docker isolation proves stable under load.
 
 ---
-
-## 💡 戰略定位
-
-### 優先順序 (2026 Q1-Q2)
-1. **BuddyShopAI** (已有客戶，優先上線) 🔥
-2. **Partner Visa** (6/5 deadline) 🔥
-3. **澳洲工作** (主要收入來源) 🔥
-4. **OpenClaw SaaS** (被動收入，排第四) ⏸️
-
-### 建議時程
-- **春節假期 + 日本前 (2/14-3/5):** ❌ 不啟動
-- **宿霧期間 (4/12-5/12):** ✅ 可做成本驗證 + PoC
-- **澳洲登陸後 (6 月+):** ✅ 評估是否 scale
-
-### 定位
-- **被動收入 side project** (不是主力)
-- 月收入目標: NT$30-60K (10-20 人)
-- 時間投入: 每週 <5 小時
-
----
-
-## 📌 決策點
-
-**在執行 Phase 2 之前，必須先確認:**
-1. ✅ VPS 成本可控 (NT$1,500/月 or less)
-2. ✅ Anthropic API 實際成本符合預估
-3. ✅ Docker 多租戶技術可行
-4. ✅ 有 3+ 個付費意願用戶
-
-**如果任一條件不成立 → 放棄或調整策略**
-
----
-
-**Next Step:** 執行 Phase 1 成本驗證待辦事項
+*Generated by OpenClaw Agent*
