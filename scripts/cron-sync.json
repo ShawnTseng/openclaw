@@ -1,0 +1,19 @@
+{
+  "name": "System - Daily Git Sync",
+  "schedule": {
+    "kind": "cron",
+    "expr": "55 23 * * *",
+    "tz": "Asia/Taipei"
+  },
+  "payload": {
+    "kind": "agentTurn",
+    "message": "執行系統備份：bash scripts/sync-git.sh"
+  },
+  "sessionTarget": "isolated",
+  "delivery": {
+    "mode": "announce",
+    "channel": "discord",
+    "to": "channel:1471143381735571639",
+    "bestEffort": true
+  }
+}
