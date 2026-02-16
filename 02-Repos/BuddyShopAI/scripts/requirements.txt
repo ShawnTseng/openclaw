@@ -1,0 +1,10 @@
+# Buddy ShopAI Scripts 依賴套件
+
+# 目前腳本皆使用 Python 標準函式庫，無需額外安裝套件
+# 保留此檔案供未來擴展使用
+
+# 未來可能需要：
+# requests>=2.31.0  # HTTP 請求（網路爬蟲）
+# beautifulsoup4>=4.12.0  # HTML 解析
+# pandas>=2.0.0  # 資料處理
+# openpyxl>=3.1.0  # Excel 檔案讀寫

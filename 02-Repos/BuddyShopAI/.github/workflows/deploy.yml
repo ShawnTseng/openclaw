@@ -1,0 +1,65 @@
+name: Deploy to Azure Functions
+
+# main branch 有 push 時自動部署（包含 PR merge）
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # 允許手動觸發
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  FUNCTION_APP_NAME: 'mrvshop-func'
+  RESOURCE_GROUP: 'rg-mrvshop-prod'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Publish
+        run: dotnet publish --configuration Release --output ./publish --no-build
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure Functions
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ env.FUNCTION_APP_NAME }}
+          package: ./publish
+
+      - name: Health Check
+        run: |
+          echo "⏳ Waiting 30s for app to warm up..."
+          sleep 30
+          
+          RESPONSE=$(curl -s -w "\n%{http_code}" https://${{ env.FUNCTION_APP_NAME }}.azurewebsites.net/api/health)
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | head -n-1)
+          
+          echo "📊 HTTP Status: $HTTP_CODE"
+          echo "📝 Response: $BODY"
+          
+          if [ "$HTTP_CODE" -eq 200 ]; then
+            echo "✅ Deployment verified!"
+          else
+            echo "⚠️ Health check returned $HTTP_CODE (app may still be starting)"
+          fi

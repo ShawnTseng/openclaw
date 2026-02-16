@@ -1,0 +1,37 @@
+{
+  "storeName": "YOUR_STORE_NAME",
+  "businessHours": "每日 10:00 - 21:00",
+  "botName": "AI 小幫手",
+  "contactInfo": "Instagram: @your_shop",
+  "faq": [
+    {
+      "question": "運費與寄送",
+      "answers": [
+        "全館滿 $X,XXX 免運。",
+        "未滿免運門檻，宅配 $100、超商取貨 $60。",
+        "現貨 1-2 個工作天內出貨。"
+      ]
+    },
+    {
+      "question": "退換貨",
+      "answers": [
+        "請依您的退換貨政策填寫。"
+      ]
+    },
+    {
+      "question": "查訂單",
+      "answers": [
+        "請提供「訂單編號」與「手機號碼」，小編會儘快為您查詢。"
+      ]
+    }
+  ],
+  "responseGuidelines": [
+    "語氣：親切、有禮貌，使用繁體中文（台灣用語）。",
+    "遇到不會的問題：請回答「這個問題我先幫您記下來，稍後會有專人為您服務喔！」",
+    "格式：請勿使用 Markdown 語法，因為 LINE 顯示會亂掉，請用純文字或 Emoji 排版。"
+  ],
+  "features": {
+    "visionSearch": false,
+    "richMenu": false
+  }
+}

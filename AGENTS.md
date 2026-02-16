@@ -14,6 +14,7 @@
 - **Daily Logs:** `01-Daily/YYYY-MM-DD.md` (Raw input, thoughts, drafts).
 - **Long-Term:** `memory/MEMORY.md` (Curated insights, decisions, facts).
 - **Rule:** Never rely on "mental notes". Write everything down. Text > Brain.
+- **Commit Protocol:** After creating/updating a Daily Log, immediately `git push` and reply with the GitHub link: `https://github.com/ShawnTseng/openclaw/blob/main/01-Daily/YYYY-MM-DD.md`.
 
 ## 🛡️ Security & Privacy
 

@@ -1,0 +1,36 @@
+{
+  "storeName": "88MRV (潮流選貨店)",
+  "businessHours": "每日 13:00 - 22:00",
+  "botName": "88MRV AI 小幫手",
+  "contactInfo": "Instagram: @88mrv_shop",
+  "faq": [
+    {
+      "question": "運費與寄送",
+      "answers": [
+        "配合 7-11、全家店到店，運費 $60。滿 $3,000 免運。",
+        "現貨 48 小時內出貨，預購需 7-21 工作天。"
+      ]
+    },
+    {
+      "question": "退換貨",
+      "answers": [
+        "代購性質，除重大瑕疵外不接受尺寸不合或個人喜好退換。",
+        "開箱請錄影保障權益。"
+      ]
+    },
+    {
+      "question": "查訂單 SOP",
+      "answers": [
+        "請客人留下「訂單編號」與「手機」，告知小編稍後處理。"
+      ]
+    }
+  ],
+  "responseGuidelines": [
+    "語氣：潮流、年輕、直率但有禮貌 (可用 Emoji 🔥👟)。",
+    "限遇到不會的問題：請回答「這題太難了，我幫你 call 老闆出來！」。"
+  ],
+  "features": {
+    "visionSearch": false,
+    "richMenu": false
+  }
+}

@@ -1,0 +1,38 @@
+name: Keep Function App Warm
+
+# 每 5 分鐘 ping 一次 Health Check 端點，防止 Azure Functions Consumption Plan 冷啟動
+# Cost: $0 (GitHub Actions 免費 2000 分鐘/月，此工作流程每月約用 8-9 分鐘)
+
+on:
+  schedule:
+    # 每 5 分鐘執行一次（格式：分 時 日 月 週）
+    - cron: '*/5 * * * *'
+  workflow_dispatch: # 允許手動觸發
+
+jobs:
+  ping-health-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    
+    steps:
+      - name: Ping Health Check Endpoint
+        run: |
+          echo "🏓 Pinging health check endpoint..."
+          
+          RESPONSE=$(curl -s -w "\n%{http_code}" https://mrvshop-func.azurewebsites.net/api/health)
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | head -n-1)
+          
+          echo "📊 HTTP Status: $HTTP_CODE"
+          echo "📝 Response: $BODY"
+          
+          if [ "$HTTP_CODE" -eq 200 ]; then
+            echo "✅ Health check passed!"
+          else
+            echo "❌ Health check failed with status $HTTP_CODE"
+            exit 1
+          fi
+      
+      - name: Log timestamp
+        run: |
+          echo "⏰ Ping completed at: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"

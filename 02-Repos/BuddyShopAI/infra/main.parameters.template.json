@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "value": "eastus"
+    },
+    "appNamePrefix": {
+      "value": "YOUR_TENANT_ID"
+    },
+    "lineChannelAccessToken": {
+      "value": "YOUR_LINE_CHANNEL_ACCESS_TOKEN"
+    },
+    "lineChannelSecret": {
+      "value": "YOUR_LINE_CHANNEL_SECRET"
+    },
+    "azureOpenAIApiKey": {
+      "value": ""
+    }
+  }
+}
