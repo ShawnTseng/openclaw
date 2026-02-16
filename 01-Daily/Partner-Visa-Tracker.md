@@ -18,6 +18,8 @@
     - [ ] **Social:** Photos, joint invites, travel itineraries.
     - [ ] **Household:** Joint lease, utility bills, mail at same address.
     - [ ] **Commitment:** Personal statements (History of relationship).
+    - [x] Shawn's Draft (2026-02-16) -> `03-Life-Ops/Australia-Migration/Visa-Statement-Shawn.md`
+    - [ ] Ting's Draft
 
 ## 📅 Timeline
 
