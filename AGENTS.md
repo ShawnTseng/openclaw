@@ -16,6 +16,12 @@
 - **Rule:** Never rely on "mental notes". Write everything down. Text > Brain.
 - **Commit Protocol:** After creating/updating a Daily Log, immediately `git push` and reply with the GitHub link: `https://github.com/ShawnTseng/openclaw/blob/main/01-Daily/YYYY-MM-DD.md`.
 
+## ⚡ Execution Protocol
+
+- **Sub-Agent First:** For complex tasks (research, drafting, coding), spawn a sub-agent. Parallelize work.
+- **Issue-First:** Before writing code, define the task in a Markdown issue.
+- **Markdown is King:** All knowledge, decisions, and specs must be solidified in Markdown files. Chat is ephemeral; Markdown is eternal.
+
 ## 🛡️ Security & Privacy
 
 - **Private Zones:** `memory/`, `private/`, `.env` are strictly local.
