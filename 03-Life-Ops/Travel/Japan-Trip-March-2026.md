@@ -1,25 +1,48 @@
-# Japan Trip - March 2026 (Ski Trip Planning)
+# Japan Trip - Tokyo & Ski Trip (Feb 23 - Mar 5, 2026)
 
-> **Context:** Upcoming ski trip with university friends (mentioned in Partner Visa statement)
-> **Purpose:** Recreation + Relationship Evidence for Visa Application
+> **Dates:** Feb 23 (Mon) - Mar 5 (Thu), 2026 (11 Days)
+> **Purpose:** Recreation + Relationship Evidence for Partner Visa Application
 > **Companions:** 2 university friends + Ting
+> **Budget:** JPY ¥129,774 (NT$ 60,164 / 2 people) | ¥64,887 per person
 
 ---
 
 ## 🎯 Trip Objectives
 
 ### Primary
-- 🎿 **Ski/Snowboard:** Main activity with friends
+- 🎿 **Ski/Snowboard:** Naeba Ski Resort (Day 8-9)
 - 📸 **Relationship Evidence:** Collect high-quality photos/videos for visa application
 - 🤝 **Social Bonding:** Strengthen friendship ties (potential Form 888 referees)
 
 ### Secondary
-- 🍜 **Cultural Experience:** Japanese food, onsens, local culture
+- 🍜 **Cultural Experience:** Japanese food, onsens (Kusatsu), local culture
+- 🎢 **Theme Parks:** Tokyo Disneysea, Fujikyu Highland
 - 💼 **Work Prep:** Clear mind before April transition to part-time work
 
 ---
 
-## 📋 Pre-Departure Checklist
+## 💰 Budget Summary
+
+| Category | 2 People (JPY) | Per Person (JPY) | Per Person (NT$) |
+|----------|----------------|------------------|------------------|
+| **Total** | ¥129,774 | ¥64,887 | NT$ 39,082 |
+
+### Major Expenses
+- **Flights:** NT$ 19,688 (Easy Travel)
+- **Accommodation:** 
+  - Amanek Asakusa Sakurabashi (2/23-3/1): ¥68,638
+  - Kusatsu Onsen Ryokan (3/1-3/2): NT$ 4,431
+  - Naeba Prince Hotel (3/2-3/4): ¥50,280
+  - HOTEL EMIT UENO (3/4-3/5): ¥10,856
+- **Ski Instructor:** NT$ 9,000 (盛教練)
+- **Tickets:**
+  - Tokyo Disneysea: NT$ 3,486 (Klook)
+  - Kamakura Day Trip: NT$ 2,620 (KKday)
+  - Teamlab Planets: NT$ 1,836 (Klook)
+
+---
+
+## 📋 Pre-Departure Checklist (Updated)
 
 ### 🛂 Documents & Admin
 - [ ] **Passport:** Valid for 6+ months
@@ -54,30 +77,84 @@
 
 ---
 
-## 🗓️ Potential Itinerary (Draft)
+## 🗓️ Detailed Itinerary
 
-### Day 1: Arrival
-- **Flight:** Taipei → Tokyo (Narita/Haneda)
-- **Transport:** Airport → Accommodation
-- **Evening:** Light exploration, convenience store run, early rest
+### Day 0: Feb 22 (Sun) - 準備出發
+- 23:00 前往桃園捷運
+- 00:00 抵達桃園機場第一航廈
+- 02:30 起飛 (台北 → 成田)
 
-### Day 2-4: Ski Resort
-- **Location:** TBD (Popular options: Niseko, Hakuba, Nozawa Onsen)
-- **Activities:** 
-  - Morning/Afternoon: Skiing/Snowboarding
-  - Evening: Onsen, dinner with friends
-- **Photos:** Prioritize Day 2 afternoon (best light)
+### Day 1: Feb 23 (Mon) - 初探東京・美食放鬆日
+- 06:35 抵達成田機場第三航廈
+- 08:42 京成成田 Sky Access → 淺草
+- 10:01 抵達 Amanek Asakusa Sakurabashi (寄物)
+- **行程:**
+  - 築地場外市場海鮮早餐
+  - 明治神宮
+  - 原宿竹下通 & 表參道散策
+  - 銀座漫步
+  - 澀谷站八公像、涉谷十字街頭
+  - 登 SHIBUYA SKY 夜景
+- **住宿:** Amanek Asakusa Sakurabashi
 
-### Day 5: Free Day / Cultural Experience
-- **Options:**
-  - Local shrine/temple visit
-  - Traditional meal experience
-  - Shopping for gifts
-- **Purpose:** Diversify photo evidence (not just skiing)
+### Day 2: Feb 24 (Tue) - 城市探索・文化時尚
+- **行程:**
+  - 秋葉原電器街純逛街
+  - 阿美橫町純逛街
+- **住宿:** Amanek Asakusa Sakurabashi
 
-### Day 6: Departure
-- **Morning:** Pack, check-out
-- **Afternoon:** Return flight to Taipei
+### Day 3: Feb 25 (Wed) - 奇幻童話樂園
+- **行程:** 東京迪士尼海洋 (Klook 門票)
+- **住宿:** Amanek Asakusa Sakurabashi
+
+### Day 4: Feb 26 (Thu) - 小江戶古都巡禮
+- 08:00 Klook 當天買車票
+- **行程:**
+  - 川越冰川神社
+  - 川越城本丸御殿
+  - 喜多院 & 500 羅漢
+  - 藏造老街 & 時之鐘
+  - 川越熊野神社
+- **住宿:** Amanek Asakusa Sakurabashi
+
+### Day 5: Feb 27 (Fri) - 富士山刺激之旅
+- **行程:** 富士急樂園挑戰雲霄飛車 (官網買一日券 + 高速巴士來回)
+- **備案:** 忍野八海湧泉
+- **住宿:** Amanek Asakusa Sakurabashi
+
+### Day 6: Feb 28 (Sat) - 湘南海景與島上風光
+- 08:00 出發
+- **行程 (KKday):**
+  - 江之島漫遊
+  - 參拜江島神社(弁財天)
+  - 登江之島展望燈塔
+  - 欣賞相模灣海景、岩屋洞窟
+- **住宿:** Amanek Asakusa Sakurabashi
+
+### Day 7: Mar 1 (Sun) - 名湯草津放鬆
+- 08:00 前往草津溫泉
+- **住宿:** Kusatsu Onsen Ryokan Yoshinoya (草津温泉 湯畑の宿 旅館 佳乃や)
+
+### Day 8: Mar 2 (Mon) - 雪國之旅開啟
+- 08:00 新幹線赴越後湯澤 → 轉車抵苗場滑雪場
+- 下午辦理裝備租借並開始滑雪
+- **住宿:** 苗場王子飯店
+
+### Day 9: Mar 3 (Tue) - 苗場滑雪樂
+- 08:00 苗場滑雪場全天滑雪體驗(多條雪道,自由暢滑)
+- **住宿:** 苗場王子飯店
+
+### Day 10: Mar 4 (Wed) - 購物返程
+- 08:00 上午離開苗場 → 上野
+- **行程:**
+  - 參觀 teamLab Planets (Klook 門票)
+  - 晚上逛秋葉原電氣街
+  - 阿美橫町逛街
+- **住宿:** HOTEL EMIT UENO (上野艾美特飯店)
+
+### Day 11: Mar 5 (Thu) - 返台
+- 08:00 淺草寺
+- 傍晚前往成田機場
 
 ---
 
