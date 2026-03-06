@@ -3,9 +3,6 @@ using System.Text.Json;
 
 namespace BuddyShopAI.Services;
 
-/// <summary>
-/// 提供商店知識庫與 System Prompt（支援多租戶）
-/// </summary>
 public class PromptProvider
 {
     private readonly ILogger<PromptProvider> _logger;
@@ -20,9 +17,6 @@ public class PromptProvider
         _configBasePath = configBasePath ?? Path.Combine(AppContext.BaseDirectory, "configs");
     }
 
-    /// <summary>
-    /// 取得商店知識庫資訊（包含店名、FAQ、回答原則等）
-    /// </summary>
     public async Task<string> GetStoreKnowledgeBaseAsync()
     {
         try
@@ -37,9 +31,6 @@ public class PromptProvider
         }
     }
 
-    /// <summary>
-    /// 取得完整的 System Prompt（含知識庫）
-    /// </summary>
     public async Task<string> GetSystemPromptAsync()
     {
         var knowledgeBase = await GetStoreKnowledgeBaseAsync();
@@ -53,10 +44,8 @@ public class PromptProvider
             return _cachedConfig;
         }
 
-        // 多租戶：優先載入 configs/{tenantId}.json
         var tenantConfigPath = Path.Combine(_configBasePath, $"{_tenantId}.json");
         
-        // 向下相容：若 configs/ 不存在，嘗試載入根目錄的 store-config.json
         var legacyConfigPath = Path.Combine(AppContext.BaseDirectory, "store-config.json");
         
         string configPath;
@@ -90,7 +79,6 @@ public class PromptProvider
     {
         var kb = new System.Text.StringBuilder();
 
-        // 商店資訊
         kb.AppendLine("### 商店資訊");
         kb.AppendLine($"- 店名：{config.StoreName}");
         kb.AppendLine($"- 營業時間：{config.BusinessHours}");
@@ -101,7 +89,6 @@ public class PromptProvider
         }
         kb.AppendLine();
 
-        // 常見問答
         kb.AppendLine("### 常見問答 (FAQ)");
         for (int i = 0; i < config.FAQ.Count; i++)
         {
@@ -114,7 +101,6 @@ public class PromptProvider
         }
         kb.AppendLine();
 
-        // 回答原則
         kb.AppendLine("### 你的回答原則");
         foreach (var guideline in config.ResponseGuidelines)
         {
@@ -154,8 +140,6 @@ public class PromptProvider
     }
 }
 
-#region Data Models
-
 public class StoreConfig
 {
     public string StoreName { get; set; } = string.Empty;
@@ -172,4 +156,3 @@ public class FaqItem
     public List<string> Answers { get; set; } = new();
 }
 
-#endregion

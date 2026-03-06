@@ -1,6 +1,6 @@
 # 💰 Buddy ShopAI 定價策略
 
-> 最後更新：2026-02-13  
+> 最後更新：2026-02-21  
 > 狀態：Phase 1 定價已確定
 
 ---
@@ -12,7 +12,7 @@
 | **系統建置費** | $36,000 (一次性) | Azure 部署、Prompt 調教、LINE 串接、商店設定 |
 | **系統維護費** | $4,500/月 (訂閱制) | Azure/OpenAI 成本、監控、參數微調。毛利率 > 90% |
 
-> **實際 Azure 成本**：目前約 $78 TWD/月（~$2.50 USD），維護費毛利極高。
+> **實際 Azure 成本**：目前約 $240 TWD/月（~$7.50 USD，含 Flex Consumption 無冷啟動），維護費毛利極高。
 
 ---
 
@@ -39,13 +39,14 @@
 | 服務 | 月成本 | 說明 |
 |------|--------|------|
 | Azure OpenAI | ~$2-3 | gpt-4o-mini，200客/天×5問×30天 |
-| Functions | $0 | 免費額度 (1M 次/月) |
+| Functions (Flex) | ~$5 | Always Ready 1 instance，無冷啟動 |
+| Functions (Staging) | $0 | Consumption Plan 免費額度 |
 | Storage | ~$0.01 | Table Storage ~10MB |
 | Key Vault | ~$0.03 | Secret 操作 |
 | App Insights | $0 | 免費 5GB/月 |
-| **總計** | **~$2.50 USD** | **~78 TWD/月** |
+| **總計** | **~$7.50 USD** | **~240 TWD/月** |
 
-> 維護費 $4,500 - 實際成本 $78 = **毛利 $4,422/月 (98%)**
+> 維護費 $4,500 - 實際成本 $240 = **毛利 $4,260/月 (95%)**
 
 ---
 
@@ -73,7 +74,7 @@
 
 **相關文檔**：
 - [商業模式](BUSINESS_MODEL.md) — 核心定位與產品路徑
-- [成本優化](../guides/COST_OPTIMIZATION.md) — 技術層面的成本控制
+- [成本優化](../engineering/COST_OPTIMIZATION.md) — 技術層面的成本控制
 
 ---
 

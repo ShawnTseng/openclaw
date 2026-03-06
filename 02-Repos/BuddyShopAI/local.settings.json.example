@@ -11,6 +11,9 @@
     
     "AzureOpenAI__Endpoint": "https://YOUR_RESOURCE.openai.azure.com/",
     "AzureOpenAI__ApiKey": "YOUR_AZURE_OPENAI_API_KEY",
-    "AzureOpenAI__DeploymentName": "gpt-4o-mini"
+    "AzureOpenAI__DeploymentName": "gpt-4o-mini",
+
+    "Manage__ApiKey": "YOUR_STRONG_RANDOM_ADMIN_KEY",
+    "Manage__LineUserId": ""
   }
 }

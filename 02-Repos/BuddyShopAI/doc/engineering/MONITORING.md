@@ -58,7 +58,7 @@ union traces, exceptions, customEvents, customMetrics
 | 偶爾沒回應 | Cold start | App Insights → Performance | 考慮 Premium Plan 或 warm-up |
 | 回應慢 | OpenAI rate limit | App Insights → `OpenAIResponseTime` metric | 增加 TPM 配額 |
 | 401 錯誤 | LINE signature 失敗 | App Insights → `SignatureValidationFailed` event | 檢查 LINE Channel Secret |
-| 用戶被拒 | Rate limiting | App Insights → `RateLimitExceeded` event | 調整 `_maxQuestionsPerHour` |
+| 用戶使用頻率高 | 正常（已移除速率限制） | App Insights → `UserRequestsPerHour` metric | 監控即可，不限制付費客戶 |
 | 歷史訊息遺失 | Table Storage 錯誤 | App Insights → Dependencies → failures | 已有 retry policy 自動處理 |
 
 ---
@@ -87,7 +87,8 @@ union traces, exceptions, customEvents, customMetrics
 | Event Name | 觸發時機 | Properties |
 |-----------|---------|------------|
 | `SignatureValidationFailed` | LINE signature 驗證失敗 | `operationId` |
-| `RateLimitExceeded` | 用戶超過速率限制 | `operationId`, `userId` |
+| `HumanModeMessageReceived` | 真人模式下收到訊息 | `operationId`, `userId` |
+| `ManageCommandReceived` | 管理員指令觸發 | `operationId`, `userId` |
 | `OpenAIRequestStart` | 開始呼叫 OpenAI | `operationId`, `userId` |
 
 ### 自訂指標
@@ -95,6 +96,7 @@ union traces, exceptions, customEvents, customMetrics
 | Metric Name | 說明 | Properties |
 |------------|------|------------|
 | `OpenAIResponseTime` | OpenAI API 回應時間 (ms) | `operationId`, `userId`, `success` |
+| `UserRequestsPerHour` | 用戶每小時請求數 | `operationId`, `userId` |
 
 ### 查看即時日誌
 
@@ -168,12 +170,13 @@ traces
 | render timechart
 ```
 
-### 查看 Rate Limiting 事件
+### 查看用戶使用量追蹤
 
 ```kql
-customEvents
-| where name == "RateLimitExceeded"
-| summarize count() by bin(timestamp, 1h), tostring(customDimensions.userId)
+customMetrics
+| where name == "UserRequestsPerHour"
+| extend userId = tostring(customDimensions.userId)
+| summarize avg(value) by bin(timestamp, 1h), userId
 | render timechart
 ```
 

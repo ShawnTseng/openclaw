@@ -34,7 +34,6 @@ public class HealthCheck
             Checks = new Dictionary<string, ComponentHealth>()
         };
 
-        // Check Table Storage
         try
         {
             var tableClient = _tableServiceClient.GetTableClient("ConversationHistory");
@@ -52,7 +51,6 @@ public class HealthCheck
             healthStatus.Status = "degraded";
         }
 
-        // Check Azure OpenAI Configuration
         try
         {
             var endpoint = _configuration["AzureOpenAI:Endpoint"];
@@ -82,7 +80,6 @@ public class HealthCheck
             healthStatus.Status = "degraded";
         }
 
-        // Check LINE Configuration
         try
         {
             var channelAccessToken = _configuration["LINE:ChannelAccessToken"];
@@ -123,3 +120,4 @@ public class ComponentHealth
     public string? Error { get; set; }
     public Dictionary<string, string>? Details { get; set; }
 }
+

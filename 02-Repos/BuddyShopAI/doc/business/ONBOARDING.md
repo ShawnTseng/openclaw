@@ -1,7 +1,7 @@
 # 🎯 新店推銷與自動化上線流程
 
 > Buddy ShopAI 新客戶導入標準作業程序  
-> 最後更新：2026-02-13
+> 最後更新：2026-02-21
 
 ---
 
@@ -103,7 +103,7 @@ az keyvault secret set --vault-name kv${TENANT_ID}prod* \
   --name AzureOpenAI-ApiKey --value "YOUR_OPENAI_KEY"
 ```
 
-詳細部署說明請見 [部署指南](../deployment/DEPLOYMENT_GUIDE.md)。
+詳細部署說明請見 [部署指南](../engineering/DEPLOYMENT.md)。
 
 ---
 
@@ -119,8 +119,11 @@ az keyvault secret set --vault-name kv${TENANT_ID}prod* \
 | 4 | 傳送「營業時間」 | 回覆正確的營業時間 | ✅ / ❌ |
 | 5 | 傳送隨機問題（如「有什麼新品」） | AI 自然回答或引導聯絡客服 | ✅ / ❌ |
 | 6 | 短時間內傳送 3 則訊息 | 訊息防抖（合併回覆） | ✅ / ❌ |
-| 7 | 1 小時內傳送 10 則訊息 | 觸發速率限制提示 | ✅ / ❌ |
-| 8 | Application Insights 查看 Log | 可看到請求記錄與遙測 | ✅ / ❌ |
+| 7 | 正常使用對話 | AI 回應穩定、Application Insights 記錄使用量 | ✅ / ❌ |
+| 8 | 真人客服轉接 | 觸發激進情境 → AI 回「轉接專人」→ 自動切換真人模式 | ✅ / ❌ |
+| 9 | 管理員收到通知 | 管理員 LINE 收到轉接通知含最近對話摘要 | ✅ / ❌ |
+| 10 | 切回 AI 模式 | 管理員傳 `/manage ai {userId}` → 用戶恢復 AI 回覆 | ✅ / ❌ |
+| 11 | Application Insights 查看 Log | 可看到請求記錄與遙測 | ✅ / ❌ |
 
 ---
 
@@ -144,7 +147,12 @@ az keyvault secret set --vault-name kv${TENANT_ID}prod* \
    「如果客人問『有沒有適合 170cm 的牛仔褲』呢？」  
    ➔ AI 會根據你的品牌風格與商品資訊智慧回答。
 
-4. **展示後台設定彈性**  
+4. **展示真人/AI 切換功能**  
+   「如果客人情緒比較激動呢？」  
+   ➔ 展示 AI 自動偵測並轉接真人客服，管理員收到通知。  
+   ➔ 展示 `/manage ai` 指令切回 AI 模式。
+
+5. **展示後台設定彈性**  
    「活動資訊可以隨時更新，不用寫程式。」  
    ➔ 展示 `configs/coolshop.json` 編輯介面（未來可用 Google Sheets）。
 

@@ -4,7 +4,7 @@ param tags object = {}
 param deploymentName string = 'gpt-4o-mini'
 param modelName string = 'gpt-4o-mini'
 param modelVersion string = '2024-07-18'
-param skuName string = 'Standard'
+param skuName string = 'GlobalStandard'
 param skuCapacity int = 30 // 30K TPM
 
 resource openai 'Microsoft.CognitiveServices/accounts@2024-10-01' = {

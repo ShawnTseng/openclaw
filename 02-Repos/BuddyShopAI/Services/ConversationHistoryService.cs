@@ -7,9 +7,6 @@ using Polly.Retry;
 
 namespace BuddyShopAI.Services;
 
-/// <summary>
-/// Service for managing conversation history in Azure Table Storage
-/// </summary>
 public class ConversationHistoryService
 {
     private readonly TableClient _tableClient;
@@ -32,7 +29,6 @@ public class ConversationHistoryService
         _pendingTableClient = serviceClient.GetTableClient("PendingMessages");
         _pendingTableClient.CreateIfNotExists();
         
-        // Configure retry policy for Table Storage operations
         _retryPipeline = new ResiliencePipelineBuilder()
             .AddRetry(new RetryStrategyOptions
             {
@@ -49,9 +45,6 @@ public class ConversationHistoryService
             .Build();
     }
 
-    /// <summary>
-    /// Get chat history for a specific user
-    /// </summary>
     public async Task<ChatHistory> GetChatHistoryAsync(string userId, string systemPrompt)
     {
         var history = new ChatHistory();
@@ -59,7 +52,6 @@ public class ConversationHistoryService
 
         try
         {
-            // Query messages for this user, ordered by RowKey (timestamp) descending
             var messages = new List<ConversationMessageEntity>();
             
             await foreach (var msg in _tableClient.QueryAsync<ConversationMessageEntity>(
@@ -69,7 +61,6 @@ public class ConversationHistoryService
                 messages.Add(msg);
             }
 
-            // 對話逾時檢查：如果最後一則訊息超過 24 小時，清除所有歷史
             if (messages.Count > 0)
             {
                 var lastMessage = messages.OrderByDescending(m => m.RowKey).First();
@@ -85,10 +76,8 @@ public class ConversationHistoryService
                 }
             }
 
-            // Sort by RowKey (timestamp) ascending to maintain conversation order
             messages = messages.OrderBy(m => m.RowKey).ToList();
 
-            // Add to chat history
             foreach (var msg in messages)
             {
                 if (msg.Role == "user")
@@ -107,9 +96,6 @@ public class ConversationHistoryService
         return history;
     }
 
-    /// <summary>
-    /// Get hourly request count for monitoring
-    /// </summary>
     public int GetHourlyRequestCount(string userId)
     {
         lock (_rateLimitTracker)
@@ -122,10 +108,8 @@ public class ConversationHistoryService
                 _rateLimitTracker[userId] = new List<DateTime>();
             }
 
-            // 清除超過 1 小時的記錄
             _rateLimitTracker[userId].RemoveAll(t => t < oneHourAgo);
 
-            // 記錄當前請求時間（用於統計）
             _rateLimitTracker[userId].Add(now);
             
             var count = _rateLimitTracker[userId].Count;
@@ -135,9 +119,6 @@ public class ConversationHistoryService
         }
     }
 
-    /// <summary>
-    /// Save a message to conversation history
-    /// </summary>
     public async Task SaveMessageAsync(string userId, string role, string content)
     {
         try
@@ -156,7 +137,6 @@ public class ConversationHistoryService
                 _logger.LogInformation("Saved {Role} message for user {UserId}", role, userId);
             }, CancellationToken.None);
 
-            // Cleanup old messages asynchronously (fire and forget)
             _ = CleanupOldMessagesAsync(userId);
         }
         catch (Exception ex)
@@ -165,11 +145,9 @@ public class ConversationHistoryService
         }
     }
 
-    /// <summary>
-    /// 將訊息暫存到 PendingMessages table，等待合併
-    /// </summary>
-    public async Task BufferPendingMessageAsync(string userId, string content, string replyToken)
+    public async Task<string> BufferPendingMessageAsync(string userId, string content, string replyToken)
     {
+        var rowKey = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff");
         try
         {
             await _retryPipeline.ExecuteAsync(async ct =>
@@ -177,13 +155,13 @@ public class ConversationHistoryService
                 var entity = new PendingMessageEntity
                 {
                     PartitionKey = userId,
-                    RowKey = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff"),
+                    RowKey = rowKey,
                     Content = content,
                     ReplyToken = replyToken
                 };
 
                 await _pendingTableClient.AddEntityAsync(entity, ct);
-                _logger.LogInformation("Buffered pending message for user {UserId}", userId);
+                _logger.LogInformation("Buffered pending message for user {UserId}, RowKey: {RowKey}", userId, rowKey);
             }, CancellationToken.None);
         }
         catch (Exception ex)
@@ -191,18 +169,13 @@ public class ConversationHistoryService
             _logger.LogError(ex, "Failed to buffer pending message for user {UserId}", userId);
             throw; // 往上拋，讓 caller 決定是否直接處理
         }
+        return rowKey;
     }
 
-    /// <summary>
-    /// 等待 grouping window 後，取得並合併該用戶所有 pending 訊息。
-    /// 回傳 null 代表有更新的訊息進來，本次 request 不需處理。
-    /// </summary>
     public async Task<(string? combinedMessage, string? latestReplyToken)> WaitAndCollectMessagesAsync(string userId, string myRowKey)
     {
-        // 等待 grouping window，讓後續連續訊息進入 buffer
         await Task.Delay(_messageGroupingWindow);
 
-        // 查詢該用戶所有 pending 訊息
         var pendingMessages = new List<PendingMessageEntity>();
         await foreach (var msg in _pendingTableClient.QueryAsync<PendingMessageEntity>(
             filter: $"PartitionKey eq '{userId}'"))
@@ -216,11 +189,9 @@ public class ConversationHistoryService
             return (null, null);
         }
 
-        // 按時間排序
         pendingMessages = pendingMessages.OrderBy(m => m.RowKey).ToList();
         var latestRowKey = pendingMessages.Last().RowKey;
 
-        // 只有「最晚的那個 request」負責合併處理
         if (myRowKey != latestRowKey)
         {
             _logger.LogInformation("User {UserId}: newer message exists (my: {MyRowKey}, latest: {LatestRowKey}), skipping",
@@ -228,14 +199,12 @@ public class ConversationHistoryService
             return (null, null);
         }
 
-        // 我是最新的 → 合併所有訊息
         var combinedMessage = string.Join("\n", pendingMessages.Select(m => m.Content));
         var latestReplyToken = pendingMessages.Last().ReplyToken;
 
         _logger.LogInformation("User {UserId}: combining {Count} messages into one",
             userId, pendingMessages.Count);
 
-        // 清除所有 pending 訊息
         foreach (var msg in pendingMessages)
         {
             try
@@ -252,9 +221,40 @@ public class ConversationHistoryService
         return (combinedMessage, latestReplyToken);
     }
 
-    /// <summary>
-    /// Remove old messages beyond the max limit
-    /// </summary>
+    public async Task<List<UserLastMessageInfo>> GetRecentUserLastMessagesAsync(int withinHours = 48)
+    {
+        var cutoff = DateTime.UtcNow.AddHours(-withinHours).ToString("yyyyMMddHHmmssfff");
+        var allMessages = new List<ConversationMessageEntity>();
+
+        await foreach (var msg in _tableClient.QueryAsync<ConversationMessageEntity>(
+            filter: $"RowKey ge '{cutoff}'"))
+        {
+            allMessages.Add(msg);
+        }
+
+        var result = allMessages
+            .GroupBy(m => m.PartitionKey)
+            .Select(g =>
+            {
+                var lastMsg = g.OrderByDescending(m => m.RowKey).First();
+                return new UserLastMessageInfo
+                {
+                    UserId = g.Key,
+                    LastMessageRole = lastMsg.Role,
+                    LastMessageContent = lastMsg.Content.Length > 60
+                        ? lastMsg.Content[..60] + "..."
+                        : lastMsg.Content,
+                    LastMessageTime = DateTime.TryParseExact(lastMsg.RowKey, "yyyyMMddHHmmssfff",
+                        null, System.Globalization.DateTimeStyles.None, out var t) ? t : DateTime.MinValue,
+                    TotalMessages = g.Count()
+                };
+            })
+            .OrderByDescending(u => u.LastMessageTime)
+            .ToList();
+
+        return result;
+    }
+
     private async Task CleanupOldMessagesAsync(string userId)
     {
         try
@@ -289,4 +289,50 @@ public class ConversationHistoryService
             _logger.LogError(ex, "Failed to cleanup old messages for user {UserId}", userId);
         }
     }
+
+    public async Task<string> GetRecentMessagesPreviewAsync(string userId, int count = 3)
+    {
+        try
+        {
+            var messages = new List<ConversationMessageEntity>();
+            await foreach (var msg in _tableClient.QueryAsync<ConversationMessageEntity>(
+                filter: $"PartitionKey eq '{userId}'"))
+            {
+                messages.Add(msg);
+            }
+
+            var recent = messages
+                .OrderByDescending(m => m.RowKey)
+                .Take(count)
+                .Reverse()
+                .ToList();
+
+            if (recent.Count == 0)
+                return "（無最近對話記錄）";
+
+            var lines = recent.Select(m =>
+            {
+                var role = m.Role == "user" ? "👤 客人" : "🤖 AI";
+                var content = m.Content?.Length > 60 ? m.Content[..60] + "..." : m.Content;
+                return $"{role}：{content}";
+            });
+
+            return string.Join("\n", lines);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to get recent messages preview for {UserId}", userId);
+            return "（無法讀取對話記錄）";
+        }
+    }
 }
+
+public class UserLastMessageInfo
+{
+    public string UserId { get; set; } = string.Empty;
+    public string LastMessageRole { get; set; } = string.Empty;
+    public string LastMessageContent { get; set; } = string.Empty;
+    public DateTime LastMessageTime { get; set; }
+    public int TotalMessages { get; set; }
+}
+

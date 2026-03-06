@@ -13,10 +13,10 @@ Azure Functions + Semantic Kernel + Azure OpenAI + LINE Messaging API。
 
 ## ✨ 特色亮點
 
-- ⚡ **Serverless 架構** - Consumption Plan，零固定成本
+- ⚡ **Serverless 架構** - Flex Consumption (Production) + Consumption Plan (Staging)
 - 🤖 **AI 驅動對話** - Azure OpenAI gpt-4o-mini
 - 👥 **多租戶支援** - 每個品牌獨立資源，完全隔離
-- 💰 **超低成本** - 每租戶約 78 TWD/月
+- 💰 **超低成本** - 每租戶約 250 TWD/月（含零冷啟動）
 - 🔐 **企業級安全** - Key Vault + Managed Identity
 - 📊 **對話記憶** - Table Storage 持久化，支援多輪對話
 - 🚀 **一鍵部署** - Bicep IaC + 自動化腳本
@@ -29,8 +29,8 @@ Azure Functions + Semantic Kernel + Azure OpenAI + LINE Messaging API。
 
 ```bash
 # 1. Clone 專案
-git clone https://github.com/ShawnTseng/88mrvShopAI.git
-cd 88mrvShopAI
+git clone https://github.com/ShawnTseng/BuddyShopAI.git
+cd BuddyShopAI
 
 # 2. 設定環境
 cp local.settings.json.example local.settings.json
@@ -41,7 +41,7 @@ dotnet restore && dotnet build
 func start
 ```
 
-詳細步驟: [快速開始指南](doc/getting-started/QUICKSTART.md)
+詳細步驟: [快速開始指南](doc/engineering/QUICKSTART.md)
 
 ### 部署到 Azure
 
@@ -54,7 +54,7 @@ cp configs/_template.json configs/mytenant.json
 ./scripts/deploy-app.sh mytenant
 ```
 
-詳細步驟: [部署指南](doc/deployment/DEPLOYMENT_GUIDE.md)
+詳細步驟: [部署指南](doc/engineering/DEPLOYMENT.md)
 
 ---
 
@@ -62,20 +62,19 @@ cp configs/_template.json configs/mytenant.json
 
 | 類別 | 文檔 | 說明 |
 |------|------|------|
-| **入門** | [快速開始](doc/getting-started/QUICKSTART.md) | 5分鐘快速上手 |
-| | [本地開發](doc/getting-started/LOCAL_DEVELOPMENT.md) | 開發環境設定 |
-| **部署** | [部署指南](doc/deployment/DEPLOYMENT_GUIDE.md) | 完整部署流程 |
-| | [故障排除](doc/deployment/TROUBLESHOOTING.md) | 常見問題 |
-| **架構** | [架構總覽](doc/architecture/OVERVIEW.md) | 系統設計概覽 |
-| | [安全架構](doc/architecture/SECURITY.md) | 安全機制 |
-| **指南** | [配置管理](doc/guides/CONFIGURATION.md) | 租戶配置 |
-| | [監控維運](doc/guides/MONITORING.md) | 監控與日誌 |
-| | [成本優化](doc/guides/COST_OPTIMIZATION.md) | 成本控制 |
+| **入門** | [快速開始](doc/engineering/QUICKSTART.md) | 5分鐘快速上手 |
+| | [本地開發](doc/engineering/LOCAL_DEVELOPMENT.md) | 開發環境設定 |
+| **部署** | [部署指南](doc/engineering/DEPLOYMENT.md) | 完整部署流程 |
+| | [故障排除](doc/engineering/TROUBLESHOOTING.md) | 常見問題 |
+| **架構** | [架構總覽](doc/engineering/ARCHITECTURE.md) | 系統設計概覽 |
+| | [安全架構](doc/engineering/SECURITY.md) | 安全機制 |
+| **指南** | [配置管理](doc/engineering/CONFIGURATION.md) | 租戶配置 |
+| | [監控維運](doc/engineering/MONITORING.md) | 監控與日誌 |
+| | [成本優化](doc/engineering/COST_OPTIMIZATION.md) | 成本控制 |
+| **功能** | [功能總覽](doc/engineering/FEATURES.md) | 所有功能清單 |
 | **商業** | [商業模式](doc/business/BUSINESS_MODEL.md) | 定位與市場 |
 | | [定價策略](doc/business/PRICING.md) | 收費結構 |
 | | [客戶上線](doc/business/ONBOARDING.md) | 新客戶 SOP |
-| **開發** | [開發路線圖](doc/development/ROADMAP.md) | 功能規劃 |
-| | [經驗教訓](doc/development/LESSONS_LEARNED.md) | 技術決策 |
 
 > 📖 完整文檔索引: [doc/README.md](doc/README.md)
 
@@ -106,19 +105,19 @@ rg-mrvshop-prod/          rg-guban-prod/
 └── mrvshop-openai-prod    └── guban-openai-prod
 ```
 
-詳細說明: [架構總覽](doc/architecture/OVERVIEW.md)
+詳細說明: [架構總覽](doc/engineering/ARCHITECTURE.md)
 
 ---
 
 ## 💰 成本估算
 
-| 服務 | 月成本 | 說明 |
-|------|--------|------|
-| Azure OpenAI | ~$2-3 | gpt-4o-mini，200客/天×5問 |
-| Functions | $0 | 免費額度 (1M 次/月) |
-| Storage | ~$0.01 | Table + Blob |
-| Key Vault | ~$0.03 | 3 Secrets |
-| **總計** | **~$2.50 USD** | **~78 TWD/月** |
+| 服務 | Production | Staging | 說明 |
+|------|-----------|---------|------|
+| Azure OpenAI | ~$2-3 | ~$0.50 | gpt-4o-mini |
+| Functions | ~$5 | $0 | Flex Always Ready / 免費額度 |
+| Storage | ~$0.01 | ~$0.01 | Table + Blob |
+| Key Vault | ~$0.03 | ~$0.03 | Secret 操作 |
+| **合計** | **~$7.50** | **~$0.55** | **~$8 USD/月** |
 
 ---
 
@@ -130,25 +129,31 @@ rg-mrvshop-prod/          rg-guban-prod/
 - ✅ 多租戶架構（獨立 Resource Group）
 - ✅ 對話記憶管理（Table Storage）
 - ✅ 訊息防抖（3秒合併）
-- ✅ 速率限制（10問/時）
-- ✅ 對話逾時（24小時重置）
+- ✅ 使用量追蹤（Application Insights 指標）
+- ✅ 對話逎時（24小時重置）
 - ✅ 密鑰安全（Key Vault + Managed Identity）
 - ✅ Webhook 簽章驗證（HMAC-SHA256）
 - ✅ Bicep IaC（一鍵部署）
 - ✅ 重試機制（Exponential Backoff）
+- ✅ 真人/AI 客服模式切換
+- ✅ 管理員 LINE 指令 + REST API（含 Quick Reply 快捷鍵）
+- ✅ 自動真人轉接（AI 偵測需轉接時自動切換 + 通知管理員）
+- ✅ 24 小時真人模式自動過期
+- ✅ Flex Consumption (Production) — Always Ready 零冷啟動
+- ✅ Keep-Warm 防冷啟動（Staging）
+- ✅ CI/CD Pipeline（GitHub Actions，config-zip 部署）
 
 ### 📋 規劃中
 
 | 優先級 | 功能 | 說明 |
 |-------|------|------|
 | P1 | Google Sheets CMS | 店家自助編輯 FAQ |
-| P1 | 冷啟動優化 | UptimeRobot 或 Premium Plan |
 | P2 | Instagram 支援 | 多平台客服 |
 | P2 | Rich Menu | LINE 底部選單 |
 | P2 | 以圖搜圖 | GPT-4o Vision |
 | P3 | 電商串接 | Shopline/Cyberbiz API |
 
-完整清單: [開發路線圖](doc/development/ROADMAP.md)
+完整清單: [功能總覽](doc/engineering/FEATURES.md)
 
 ---
 
@@ -173,23 +178,31 @@ rg-mrvshop-prod/          rg-guban-prod/
 BuddyShopAI/
 ├── Program.cs                         # DI 與服務註冊
 ├── LineWebhook.cs                     # LINE Webhook 處理
+├── ManageApi.cs                       # 管理員 REST API
+├── HealthCheck.cs                     # Health Check 端點
+├── KeepWarmTimer.cs                   # Keep-Warm Timer
+├── HumanModeTimeoutTimer.cs           # 24h 真人模式自動過期
+├── Models/
+│   ├── ConversationMessageEntity.cs   # 對話歷史 Entity
+│   ├── PendingMessageEntity.cs        # 訊息合併暫存 Entity
+│   └── UserModeEntity.cs              # 用戶模式 Entity
 ├── Services/
 │   ├── ConversationHistoryService.cs  # 對話歷史管理
+│   ├── ManageCommandService.cs        # 管理員 LINE 指令
+│   ├── UserModeService.cs             # 真人/AI 模式切換
 │   ├── LineSignatureValidator.cs      # 簽章驗證
-│   └── PromptProvider.cs              # Prompt 與知識庫
+│   └── PromptProvider.cs              # 多租戶知識庫
 ├── configs/                           # 租戶配置
-│   ├── _template.json
-│   ├── mrvshop.json
-│   └── guban.json
 ├── infra/                             # Bicep IaC
-│   ├── main.bicep
-│   ├── modules/
-│   └── main.parameters.*.json
 ├── scripts/                           # 部署腳本
-│   ├── deploy-infra.sh
-│   ├── deploy-app.sh
-│   └── deploy-all.sh
-└── doc/                               # 完整文檔
+├── .github/workflows/                 # CI/CD
+│   ├── deploy.yml                     # 部署應用
+│   ├── provision.yml                  # 佈建基礎設施
+│   ├── promote.yml                    # Staging → Production
+│   └── keep-warm.yml                  # 防冷啟動
+└── doc/
+    ├── engineering/                   # 工程技術文檔
+    └── business/                      # 商業文檔
 ```
 
 ---

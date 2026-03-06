@@ -19,8 +19,10 @@ public class LineWebhook
     private readonly LineSignatureValidator _signatureValidator;
     private readonly Kernel _kernel;
     private readonly ConversationHistoryService _historyService;
+    private readonly UserModeService _userModeService;
     private readonly PromptProvider _promptProvider;
     private readonly TelemetryClient _telemetryClient;
+    private readonly ManageCommandService _manageCommandService;
 
     public LineWebhook(
         ILogger<LineWebhook> logger,
@@ -28,16 +30,20 @@ public class LineWebhook
         LineSignatureValidator signatureValidator,
         Kernel kernel,
         ConversationHistoryService historyService,
+        UserModeService userModeService,
         PromptProvider promptProvider,
-        TelemetryClient telemetryClient)
+        TelemetryClient telemetryClient,
+        ManageCommandService manageCommandService)
     {
         _logger = logger;
         _lineClient = lineClient;
         _signatureValidator = signatureValidator;
         _kernel = kernel;
         _historyService = historyService;
+        _userModeService = userModeService;
         _promptProvider = promptProvider;
         _telemetryClient = telemetryClient;
+        _manageCommandService = manageCommandService;
     }
 
     [Function("LineWebhook")]
@@ -51,7 +57,6 @@ public class LineWebhook
         string? body = null;
         try
         {
-            // Ensure stream is at the beginning
             if (req.Body.CanSeek)
             {
                 req.Body.Position = 0;
@@ -72,7 +77,6 @@ public class LineWebhook
             
             var signature = req.Headers["X-Line-Signature"].FirstOrDefault();
 
-            // Validate signature
             if (!_signatureValidator.ValidateSignature(body, signature))
             {
                 _logger.LogWarning("Invalid signature. OperationId: {OperationId}", operationId);
@@ -82,7 +86,6 @@ public class LineWebhook
                 return new UnauthorizedResult();
             }
 
-            // Process events
             var events = WebhookEventParser.Parse(body);
             foreach (var ev in events)
             {
@@ -118,7 +121,32 @@ public class LineWebhook
                 
                 _logger.LogInformation("User {UserId}: {Message}. OperationId: {OperationId}", userId, textMessage.Text, operationId);
 
-                // 記錄使用統計
+                if (_manageCommandService.IsManager(userId) && _manageCommandService.IsManageCommand(textMessage.Text))
+                {
+                    _logger.LogInformation("Manage command intercepted from {UserId}. OperationId: {OperationId}", userId, operationId);
+                    _telemetryClient.TrackEvent("ManageCommandReceived", new Dictionary<string, string>
+                    {
+                        ["operationId"] = operationId,
+                        ["userId"] = userId
+                    });
+                    await _manageCommandService.HandleAsync(userId, textMessage.Text);
+                    return; // 不進入一般 AI 流程
+                }
+
+                if (await _userModeService.IsHumanModeAsync(userId))
+                {
+                    _logger.LogInformation(
+                        "User {UserId} is in HUMAN mode. Saving message without AI response. OperationId: {OperationId}",
+                        userId, operationId);
+                    await _historyService.SaveMessageAsync(userId, "user", textMessage.Text);
+                    _telemetryClient.TrackEvent("HumanModeMessageReceived", new Dictionary<string, string>
+                    {
+                        ["operationId"] = operationId,
+                        ["userId"] = userId
+                    });
+                    return; // 不進行 AI 回應，等待真人客服介入
+                }
+
                 var requestCount = _historyService.GetHourlyRequestCount(userId);
                 _telemetryClient.TrackMetric("UserRequestsPerHour", requestCount, 
                     new Dictionary<string, string>
@@ -127,16 +155,11 @@ public class LineWebhook
                         ["userId"] = userId
                     });
 
-                // ── 訊息合併流程 ──
-                // 1. 將訊息暫存到 Table Storage
-                var myRowKey = DateTime.UtcNow.ToString("yyyyMMddHHmmssfff");
-                await _historyService.BufferPendingMessageAsync(userId, textMessage.Text, messageEvent.ReplyToken);
+                var myRowKey = await _historyService.BufferPendingMessageAsync(userId, textMessage.Text, messageEvent.ReplyToken);
 
-                // 2. 等待 grouping window（3 秒），讓後續訊息有時間進入 buffer
                 var (combinedMessage, latestReplyToken) = 
                     await _historyService.WaitAndCollectMessagesAsync(userId, myRowKey);
 
-                // 3. 如果不是最新的 request → 跳過，由最新的 request 處理
                 if (combinedMessage == null)
                 {
                     _logger.LogInformation("User {UserId}: skipping, a newer request will handle the grouped messages. OperationId: {OperationId}",
@@ -151,18 +174,13 @@ public class LineWebhook
                     ["messageLength"] = combinedMessage.Length.ToString()
                 });
 
-                // ── 正常 AI 處理流程 ──
-                // 取得對話歷史（含系統提示）
                 var systemPrompt = await _promptProvider.GetSystemPromptAsync();
                 var history = await _historyService.GetChatHistoryAsync(userId, systemPrompt);
 
-                // 加入合併後的用戶訊息
                 history.AddUserMessage(combinedMessage);
                 
-                // 儲存用戶訊息到歷史
                 await _historyService.SaveMessageAsync(userId, "user", combinedMessage);
 
-                // Get AI response with retry mechanism
                 string responseText;
                 var aiStartTime = DateTime.UtcNow;
                 _telemetryClient.TrackEvent("OpenAIRequestStart", new Dictionary<string, string>
@@ -206,10 +224,64 @@ public class LineWebhook
                     responseText = "不好意思，目前系統有點忙碌中 😅\n您的問題我已經記錄下來，會盡快請真人小編為您處理！\n\n或者您也可以稍後再試試看喔！";
                 }
 
-                // 儲存 AI 回應到歷史
                 await _historyService.SaveMessageAsync(userId, "assistant", responseText);
 
-                // Reply to LINE user（使用最新的 ReplyToken，過期時 fallback 到 Push Message）
+                if (responseText.Contains("轉接給專人") || responseText.Contains("轉接專人"))
+                {
+                    _logger.LogInformation(
+                        "🔄 Auto-handoff detected for user {UserId}. Switching to human mode. OperationId: {OperationId}",
+                        userId, operationId);
+
+                    await _userModeService.SetUserModeAsync(userId, "human", "AI 自動轉接：偵測到轉接專人回覆");
+
+                    _telemetryClient.TrackEvent("AutoHumanHandoff", new Dictionary<string, string>
+                    {
+                        ["operationId"] = operationId,
+                        ["userId"] = userId,
+                        ["trigger"] = "AI response contains handoff keyword"
+                    });
+
+                    var manageUserId = Environment.GetEnvironmentVariable("Manage__LineUserId");
+                    if (!string.IsNullOrEmpty(manageUserId))
+                    {
+                        string displayName;
+                        try
+                        {
+                            var profile = await _lineClient.GetUserProfileAsync(userId);
+                            displayName = profile.DisplayName;
+                        }
+                        catch
+                        {
+                            displayName = userId[..Math.Min(12, userId.Length)] + "...";
+                        }
+
+                        var recentMessages = await _historyService.GetRecentMessagesPreviewAsync(userId, 3);
+                        var managerNotification =
+                            $"🔴 自動轉接通知\n\n" +
+                            $"👤 用戶名稱：{displayName}\n" +
+                            $"🆔 UserId：{userId[..Math.Min(12, userId.Length)]}...\n\n" +
+                            $"📝 最近對話：\n{recentMessages}\n\n" +
+                            $"請至 LINE 官方帳號管理員後台查看聊天記錄\n\n" +
+                            $"👇 處理完畢後點下方按鈕切回 AI：";
+                        try
+                        {
+                            var quickReply = new QuickReply
+                            {
+                                Items = new[]
+                                {
+                                    new QuickReplyButtonObject(new MessageTemplateAction("✅ 切回AI", $"/manage ai {userId}")),
+                                    new QuickReplyButtonObject(new MessageTemplateAction("📋 查看模式", "/manage modes"))
+                                }
+                            };
+                            await _lineClient.PushMessageAsync(manageUserId, new[] { new TextMessage(managerNotification, quickReply) });
+                        }
+                        catch (Exception notifyEx)
+                        {
+                            _logger.LogWarning(notifyEx, "Failed to notify manager about auto-handoff for {UserId}", userId);
+                        }
+                    }
+                }
+
                 await SendMessageWithFallbackAsync(latestReplyToken!, userId, responseText, operationId);
             }
         }
@@ -222,7 +294,6 @@ public class LineWebhook
                 ["errorLocation"] = "ProcessEvent"
             });
 
-            // 嘗試通知用戶系統異常
             if (webhookEvent is MessageEvent { Source.UserId: string failedUserId })
             {
                 try
@@ -239,15 +310,26 @@ public class LineWebhook
         }
     }
 
-    /// <summary>
-    /// 回覆用戶：優先用 ReplyToken，過期或失敗時 fallback 到 Push Message API
-    /// </summary>
     private async Task SendMessageWithFallbackAsync(string replyToken, string userId, string text, string operationId)
     {
-        var message = new TextMessage(text);
+        var segments = text
+            .Split("[SPLIT]", StringSplitOptions.RemoveEmptyEntries)
+            .Select(s => s.Trim())
+            .Where(s => !string.IsNullOrEmpty(s))
+            .Take(5)
+            .ToArray();
+
+        var messages = segments.Select(s => new TextMessage(s)).ToArray<ISendMessage>();
+
+        if (segments.Length > 1)
+        {
+            _logger.LogInformation("Splitting reply into {Count} messages for user {UserId}. OperationId: {OperationId}",
+                segments.Length, userId, operationId);
+        }
+
         try
         {
-            await _lineClient.ReplyMessageAsync(replyToken, new[] { message });
+            await _lineClient.ReplyMessageAsync(replyToken, messages);
             _logger.LogInformation("Reply sent to user {UserId}. OperationId: {OperationId}", userId, operationId);
         }
         catch (LineResponseException ex)
@@ -263,7 +345,7 @@ public class LineWebhook
 
             try
             {
-                await _lineClient.PushMessageAsync(userId, new[] { message });
+                await _lineClient.PushMessageAsync(userId, messages);
                 _logger.LogInformation("Push message sent to user {UserId}. OperationId: {OperationId}", userId, operationId);
             }
             catch (Exception pushEx)
@@ -279,9 +361,6 @@ public class LineWebhook
         }
     }
 
-    /// <summary>
-    /// 使用 Exponential Backoff 重試機制呼叫 AI
-    /// </summary>
     private async Task<ChatMessageContent> GetAIResponseWithRetryAsync(
         IChatCompletionService chatService, 
         ChatHistory history,
@@ -301,7 +380,6 @@ public class LineWebhook
                     throw; // 最後一次嘗試失敗，往上拋出
                 }
 
-                // Exponential backoff: 1s, 2s, 4s
                 var delaySeconds = Math.Pow(2, attempt);
                 _logger.LogWarning("Rate limit hit (429), retrying in {Delay}s... (Attempt {Attempt}/{MaxRetries}). OperationId: {OperationId}", 
                     delaySeconds, attempt + 1, maxRetries, operationId);
@@ -313,3 +391,4 @@ public class LineWebhook
         throw new InvalidOperationException("Should not reach here");
     }
 }
+

@@ -1,0 +1,155 @@
+### ======================================================
+### LINE Webhook & Health 手動測試檔案
+### 使用方式：安裝 VS Code REST Client 擴充後，點擊 Send Request
+###
+### 簽章產生方式（X-Line-Signature）：
+###   python3 -c "
+###   import hmac, hashlib, base64
+###   body = '<json body 原始字串>'
+###   secret = '<LINE Channel Secret>'
+###   sig = base64.b64encode(hmac.new(secret.encode(), body.encode(), hashlib.sha256).digest()).decode()
+###   print(sig)
+###   "
+### ======================================================
+
+### 共用變數（切換環境只需改 baseUrl）
+@baseUrlProd    = https://mrvshop-func.azurewebsites.net/api
+@baseUrlStaging = https://mrvshop-func-staging.azurewebsites.net/api
+@baseUrl        = {{baseUrlProd}}
+
+# 填入 LINE Channel Secret（僅本機測試用，勿 commit）
+@lineChannelSecret = YOUR_LINE_CHANNEL_SECRET
+
+# 測試用 LINE User ID（可填自己的 LINE UID）
+@testUserId = Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# ──────────────────────────────────────────────
+# 1. Health Check（無需簽章，確認服務是否正常）
+# ──────────────────────────────────────────────
+
+### Health Check
+GET {{baseUrl}}/health
+
+### Health Check - Staging
+GET {{baseUrlStaging}}/health
+
+# ──────────────────────────────────────────────
+# 2. Webhook 連通測試（空事件陣列）
+#    LINE Developer Console 按下 Verify 時發送的格式
+#    ⚠️  需要填入正確的 X-Line-Signature，否則回傳 401
+#    快速產生：
+#      BODY='{"destination":"Utest","events":[]}'
+#      python3 -c "import hmac,hashlib,base64; print(base64.b64encode(hmac.new('YOUR_SECRET'.encode(), '$BODY'.encode(), hashlib.sha256).digest()).decode())"
+# ──────────────────────────────────────────────
+
+### Webhook Verify（空事件 - 模擬 LINE Verify 按鈕）
+# 填入正確 signature 後送出，應回傳 200
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: REPLACE_WITH_VALID_SIGNATURE
+
+{
+  "destination": "Utest123",
+  "events": []
+}
+
+# ──────────────────────────────────────────────
+# 3. 模擬真實 LINE 訊息事件
+#    ⚠️  需要有效 X-Line-Signature
+# ──────────────────────────────────────────────
+
+### 模擬用戶傳送文字訊息（需有效 signature）
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: REPLACE_WITH_VALID_SIGNATURE
+
+{
+  "destination": "Utest123",
+  "events": [
+    {
+      "type": "message",
+      "message": {
+        "type": "text",
+        "id": "999999999",
+        "text": "你好，請問幾天到貨？"
+      },
+      "webhookEventId": "test-event-001",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1708502400000,
+      "source": {
+        "type": "user",
+        "userId": "{{testUserId}}"
+      },
+      "replyToken": "EXPIRED_REPLY_TOKEN_WILL_FALLBACK_TO_PUSH",
+      "mode": "active"
+    }
+  ]
+}
+
+### 模擬查詢訂單物流
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: REPLACE_WITH_VALID_SIGNATURE
+
+{
+  "destination": "Utest123",
+  "events": [
+    {
+      "type": "message",
+      "message": {
+        "type": "text",
+        "id": "999999998",
+        "text": "我的貨到哪裡了？2月15號下單的"
+      },
+      "webhookEventId": "test-event-002",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1708502400000,
+      "source": {
+        "type": "user",
+        "userId": "{{testUserId}}"
+      },
+      "replyToken": "EXPIRED_REPLY_TOKEN_WILL_FALLBACK_TO_PUSH",
+      "mode": "active"
+    }
+  ]
+}
+
+### 模擬要求退款（測試婉拒流程）
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: REPLACE_WITH_VALID_SIGNATURE
+
+{
+  "destination": "Utest123",
+  "events": [
+    {
+      "type": "message",
+      "message": {
+        "type": "text",
+        "id": "999999997",
+        "text": "斷貨了，我要退款"
+      },
+      "webhookEventId": "test-event-003",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1708502400000,
+      "source": {
+        "type": "user",
+        "userId": "{{testUserId}}"
+      },
+      "replyToken": "EXPIRED_REPLY_TOKEN_WILL_FALLBACK_TO_PUSH",
+      "mode": "active"
+    }
+  ]
+}
+
+# ──────────────────────────────────────────────
+# 4. 快速簽章產生腳本（在 Terminal 執行）
+# ──────────────────────────────────────────────
+#
+# BODY=$(cat <<'EOF'
+# {"destination":"Utest123","events":[]}
+# EOF
+# )
+# SECRET="YOUR_LINE_CHANNEL_SECRET"
+# SIG=$(echo -n "$BODY" | openssl dgst -sha256 -hmac "$SECRET" -binary | base64)
+# echo "X-Line-Signature: $SIG"

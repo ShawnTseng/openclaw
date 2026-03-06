@@ -1,11 +1,33 @@
 #!/bin/bash
 set -e
 
-TENANT=${1:?"Usage: $0 <tenant-id> [function-app-name] [resource-group]"}
-FUNCTION_APP_NAME=${2:-"${TENANT}-func"}
-RESOURCE_GROUP=${3:-"rg-${TENANT}-prod"}
+# Usage: ./deploy-app.sh <tenant-id> [environment] [function-app-name] [resource-group]
+# environment: staging | production (default: production)
+# Examples:
+#   ./deploy-app.sh mrvshop                    # production (auto-derived names)
+#   ./deploy-app.sh mrvshop staging            # staging (auto-derived names)
+#   ./deploy-app.sh mrvshop production myapp rg-myapp  # explicit names
+
+TENANT=${1:?"Usage: $0 <tenant-id> [environment] [function-app-name] [resource-group]"}
+ENVIRONMENT=${2:-"production"}
+
+# Validate environment
+if [[ "$ENVIRONMENT" != "staging" && "$ENVIRONMENT" != "production" ]]; then
+  echo "❌ Invalid environment: $ENVIRONMENT (must be 'staging' or 'production')"
+  exit 1
+fi
+
+# Derive names based on environment (matches Bicep naming convention)
+if [ "$ENVIRONMENT" == "staging" ]; then
+  FUNCTION_APP_NAME=${3:-"${TENANT}-func-staging"}
+  RESOURCE_GROUP=${4:-"rg-${TENANT}-staging"}
+else
+  FUNCTION_APP_NAME=${3:-"${TENANT}-func"}
+  RESOURCE_GROUP=${4:-"rg-${TENANT}-prod"}
+fi
 
 echo "==> [Buddy ShopAI] Deploying app for tenant: $TENANT"
+echo "    Environment: $ENVIRONMENT"
 echo "    Function App: $FUNCTION_APP_NAME"
 echo "    Resource Group: $RESOURCE_GROUP"
 

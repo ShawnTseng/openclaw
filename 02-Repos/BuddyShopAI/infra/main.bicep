@@ -1,5 +1,14 @@
-param location string = 'eastus'
-param appNamePrefix string = 'mrvshop88'
+param location string = 'eastasia'
+param appNamePrefix string = 'mrvshop'
+
+// Azure OpenAI 區域（gpt-4o-mini GlobalStandard 在 eastasia 不可用，japaneast 為最近可用區域）
+param openAILocation string = 'japaneast'
+
+// 'staging' | 'production'
+// staging    → resources get a '-staging' suffix, deployed to rg-{customer}-staging
+// production → no suffix,                         deployed to rg-{customer}-prod
+@allowed(['staging', 'production'])
+param environment string = 'production'
 
 @secure()
 param lineChannelAccessToken string
@@ -9,17 +18,23 @@ param lineChannelSecret string
 @secure()
 param azureOpenAIApiKey string = ''
 
+var isStaging      = environment == 'staging'
+var envSuffix      = isStaging ? '-staging' : ''       // resource name suffix
+var envSuffixShort = isStaging ? 'staging' : 'prod'    // used in names with length limits
+
 param tags object = {
-  Environment: 'prod'
+  Environment: environment
   Project: 'BuddyShopAI'
   ManagedBy: 'Bicep'
 }
 
-var uniqueSuffix = uniqueString(resourceGroup().id)
-var storageAccountName = '${appNamePrefix}${take(uniqueSuffix, 8)}'
-var functionAppName = '${appNamePrefix}-func'
-var keyVaultName = 'kv${replace(appNamePrefix, '-', '')}prod${take(uniqueSuffix, 3)}'
-var openAIName = '${appNamePrefix}-openai-prod'
+var uniqueSuffix      = uniqueString(resourceGroup().id)
+// Production: preserve original naming (appNamePrefix + 8 chars) for backward compatibility
+// Staging:    use 'staging' prefix to differentiate
+var storageAccountName = isStaging ? '${appNamePrefix}staging${take(uniqueSuffix, 4)}' : '${appNamePrefix}${take(uniqueSuffix, 8)}'
+var functionAppName    = '${appNamePrefix}-func${envSuffix}'
+var keyVaultName       = 'kv${replace(appNamePrefix, '-', '')}${envSuffixShort}${take(uniqueSuffix, 3)}'
+var openAIName         = '${appNamePrefix}-openai-${envSuffixShort}'
 
 // === Core Resources ===
 
@@ -45,7 +60,7 @@ module openai 'modules/azureopenai.bicep' = {
   name: 'azureopenai'
   params: {
     name: openAIName
-    location: location
+    location: openAILocation
     tags: tags
   }
 }
@@ -53,14 +68,14 @@ module openai 'modules/azureopenai.bicep' = {
 module appInsights 'modules/applicationInsights.bicep' = {
   name: 'applicationinsights'
   params: {
-    name: '${appNamePrefix}-appinsights'
+    name: '${appNamePrefix}-appinsights${envSuffix}'
     location: location
     tags: tags
   }
 }
 
 
-// === Function App (Consumption Plan) ===
+// === Function App (Consumption Plan for staging, Flex Consumption for production) ===
 
 module functionApp 'modules/functionApp.bicep' = {
   name: 'functionapp'
@@ -69,6 +84,9 @@ module functionApp 'modules/functionApp.bicep' = {
     location: location
     tags: tags
     storageConnectionString: storage.outputs.connectionString
+    storageAccountName: storageAccountName
+    storageBlobEndpoint: storage.outputs.blobEndpoint
+    useFlexConsumption: !isStaging
     appSettings: [
       {
         name: 'TENANT_ID'
@@ -109,7 +127,8 @@ module functionApp 'modules/functionApp.bicep' = {
 // === Key Vault Secrets ===
 
 resource lineAccessTokenSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  name: '${keyVaultName}/LINE-ChannelAccessToken'
+  name: 'LINE-ChannelAccessToken'
+  parent: existingKeyVault
   properties: {
     value: lineChannelAccessToken
   }
@@ -117,7 +136,8 @@ resource lineAccessTokenSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = 
 }
 
 resource lineSecretSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  name: '${keyVaultName}/LINE-ChannelSecret'
+  name: 'LINE-ChannelSecret'
+  parent: existingKeyVault
   properties: {
     value: lineChannelSecret
   }
@@ -125,7 +145,8 @@ resource lineSecretSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
 }
 
 resource azureOpenAIApiKeySecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  name: '${keyVaultName}/AzureOpenAI-ApiKey'
+  name: 'AzureOpenAI-ApiKey'
+  parent: existingKeyVault
   properties: {
     value: azureOpenAIApiKey != '' ? azureOpenAIApiKey : openai.outputs.apiKey
   }

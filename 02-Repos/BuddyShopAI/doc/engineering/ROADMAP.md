@@ -1,6 +1,6 @@
 # Buddy ShopAI 開發路線圖
 
-> 最後更新：2026-02-13
+> 最後更新：2026-02-21
 
 ---
 
@@ -13,7 +13,7 @@
 
 - [ ] **端對端測試（各租戶）**  
   用真實 LINE 帳號傳訊息，確認 AI 正常回覆。  
-  驗證項目：FAQ 回答、速率限制、對話歷史、逾時重置。
+  驗證項目：FAQ 回答、使用量追蹤、對話歷史、逎時重置。
 
 - [x] **~~Key Vault Secret 驗證（mrvshop）~~** ✅  
   已確認 `kvmrvshopprodt2i` 含 3 個 Secrets：  
@@ -48,11 +48,11 @@
   - 預購流程
   - 品牌介紹
 
-- [ ] **冷啟動優化**  
-  Consumption Plan 閒置後冷啟動可能 5-15 秒。  
-  方案：
-  - 使用免費的 UptimeRobot 每 5 分鐘 Ping Webhook URL
-  - 或接受冷啟動延遲（LINE 用戶不太敏感）
+- [x] **~~冷啟動優化~~** ✅  
+  已實施 Keep-Warm 機制：
+  - KeepWarmTimer.cs（Timer Trigger 每 5 分鐘 ping /api/health）
+  - keep-warm.yml（GitHub Actions 外部 ping’）
+  - 首次回應從 5-15秒降至 0.5-2秒
 
 ---
 
@@ -70,7 +70,7 @@
   - 研究 Instagram Messaging API（需 Meta Business）
   - 設計統一的訊息抽象層（支援 LINE/IG 雙平台）
   - Webhook 路由機制（根據平台分流）
-  - 詳見 [INSTAGRAM_INTEGRATION.md](../features/INSTAGRAM_INTEGRATION.md)
+  - 詳見 [INSTAGRAM_INTEGRATION.md](INSTAGRAM_INTEGRATION.md)
 
 - [ ] **Rich Menu 與 Flex Message**  
   提供更豐富的 LINE 互動體驗：
@@ -97,7 +97,7 @@
 ## 🔧 技術債務
 
 - [x] ~~**刪除根目錄 DEPLOYMENT.md**~~  
-  已搬移至 `doc/deployment/DEPLOYMENT_GUIDE.md`，根目錄舊檔案已刪除。
+  已搬移至 `doc/engineering/DEPLOYMENT.md`，根目錄舊檔案已刪除。
 
 - [x] ~~**清理過時的 Bicep 參數檔**~~  
   已刪除 `main.parameters.json`、`main.parameters.prod.json`、`main.parameters.prod.json.example`  

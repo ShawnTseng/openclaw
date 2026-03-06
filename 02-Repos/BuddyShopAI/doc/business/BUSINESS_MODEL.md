@@ -1,6 +1,6 @@
 # 💼 Buddy ShopAI 商業模式
 
-> 最後更新：2026-02-13  
+> 最後更新：2026-02-21  
 > 狀態：Phase 1 已上線（多租戶架構已實作）
 
 ---
@@ -37,13 +37,14 @@
 
 ### Phase 1：智能客服 (Smart Clerk) — ✅ 已上線
 
-- 功能：基礎問答、運費查詢、FAQ 自動回覆、尺寸建議
-- 技術：Azure Functions + Azure OpenAI + configs/{tenantId}.json
-- 價值：節省真人客服 60-70% 時間
+- 功能：基礎問答、運費查詢、FAQ 自動回覆、真人/AI 客服模式切換、自動轉接真人
+- 技術：Azure Functions (Flex Consumption) + Azure OpenAI + configs/{tenantId}.json
+- 價值：節省真人客服 60-70% 時間，無冷啟動即時回應
 
 ### Phase 2：視覺辨識與進階知識庫 (Visual Stylist) — 📋 規劃中
 
 - 以圖搜圖（GPT-4o Vision）
+- 尺寸建議功能（身高體重推薦）
 - No-Code CMS（Google Sheets 取代靜態 JSON）
 - PDF 知識庫 (RAG)
 
@@ -56,8 +57,8 @@
 
 ## 4. 服務邊界
 
-- **包含**：AI 客服部署、Prompt 調教、LINE 串接、商店設定、系統監控
-- **除外**：Phase 2/3 功能、行銷素材製作、主動推播設定
+- **包含**：AI 客服部署、Prompt 調教、LINE 串接、商店設定、系統監控、真人/AI 模式切換
+- **除外**：Phase 2/3 功能（尺寸建議、以圖搜圖等）、行銷素材製作、主動推播設定
 
 ---
 

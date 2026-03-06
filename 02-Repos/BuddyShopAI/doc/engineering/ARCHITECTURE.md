@@ -15,7 +15,7 @@
                      ▼
 ┌─────────────────────────────────────────────────────────┐
 │            Azure Functions (Compute Layer)              │
-│         .NET 8 Isolated Worker, Consumption Plan        │
+│    .NET 8 Isolated Worker, Flex Consumption (Prod)     │
 │                                                          │
 │  ┌──────────────┐   ┌──────────────┐   ┌────────────┐  │
 │  │LineWebhook.cs│──►│Services/     │──►│Models/     │  │
@@ -72,14 +72,16 @@ Tenant: mrvshop                    Tenant: guban
 | 屬性 | 值 |
 |------|---|
 | Runtime | .NET 8 (Isolated Worker) |
-| Plan | Consumption (動態擴展) |
+| Plan | Flex Consumption (Production) / Consumption (Staging) |
 | OS | Linux |
-| 觸發器 | HTTP Trigger |
+| 觸發器 | HTTP Trigger, Timer Trigger |
 | 認證 | Function Level |
 
 **選擇理由**:
-- Serverless，零固定成本
-- 自動擴展，應對流量波動
+- Flex Consumption + Always Ready 1 instance，無冷啟動
+- 成本僅 ~$5/月，遠低於 Premium Plan (~$158/月)
+- Staging 維持 Consumption Plan 節省成本
+- 自動擴展（最多 40 instances），應對流量波動
 - 與 Azure 生態整合完美
 
 ### 2. Azure OpenAI（AI 引擎）
@@ -131,8 +133,8 @@ Tenant: mrvshop                    Tenant: guban
 1. Webhook Ingestion
    └─► 驗證 HMAC-SHA256 簽章
 
-2. Rate Limiting
-   └─► 檢查用戶速率限制（10 問/時）
+2. Usage Tracking
+   └─► 記錄用戶使用頻率（Application Insights 指標）
 
 3. Message Debounce
    └─► 3 秒內連續訊息合併
@@ -161,13 +163,14 @@ Tenant: mrvshop                    Tenant: guban
 | 服務 | 月成本 | 說明 |
 |------|--------|------|
 | Azure OpenAI | ~$2-3 | 200客/天×5問×30天 |
-| Functions | $0 | 免費額度 (1M 次/月) |
+| Functions (Flex Prod) | ~$5 | Always Ready 1 instance |
+| Functions (Staging) | $0 | Consumption 免費額度 |
 | Storage | ~$0.01 | Table + Blob |
 | Key Vault | ~$0.03 | 3 Secrets |
 | App Insights | $0 | 免費 5GB/月 |
-| **總計** | **~$2.50 USD** | **~78 TWD/月** |
+| **總計** | **~$7.50 USD** | **~240 TWD/月** |
 
-詳細分析：[成本優化](../guides/COST_OPTIMIZATION.md)
+詳細分析：[成本優化](COST_OPTIMIZATION.md)
 
 ---
 
@@ -178,22 +181,22 @@ Tenant: mrvshop                    Tenant: guban
 | AI 引擎 | Azure OpenAI | Google Gemini | A | 企業級、可控成本 |
 | 對話儲存 | IMemoryCache | Table Storage | B | 持久化、跨 instance |
 | 密鑰管理 | App Settings | Key Vault | B | 零明文風險 |
-| 計算資源 | Dedicated Plan | Consumption | B | 零固定成本 |
+| 計算資源 | Dedicated Plan | Flex Consumption | B | 無冷啟動、低成本 (~$5/月) |
 | 多租戶策略 | Shared RG | Isolated RG | B | 風險隔離、帳務清晰 |
 
-詳細記錄：[經驗教訓](../development/LESSONS_LEARNED.md)
+詳細記錄：[經驗教訓](LESSONS_LEARNED.md)
 
 ---
 
 ## 擴展性設計
 
 ### 水平擴展
-- Azure Functions 自動擴展（Consumption Plan）
-- 單一 instance 可處理多個並發請求
+- Azure Functions Flex Consumption 自動擴展（最多 40 instances）
+- Production Always Ready 1 instance，無冷啟動
 - Table Storage 自動分區（PartitionKey = userId）
 
 ### 垂直擴展
-- 可升級至 Premium Plan（固定資源）
+- 可調整 Flex instance 記憶體（512MB / 2048MB / 4096MB）
 - 可調整 OpenAI TPM 配額
 
 ### 區域擴展
@@ -209,18 +212,18 @@ Tenant: mrvshop                    Tenant: guban
 - **告警**: 可設定成本、錯誤率告警（待實作）
 - **查詢**: KQL (Kusto Query Language)
 
-詳細說明：[監控與維運](../guides/MONITORING.md)
+詳細說明：[監控與維運](MONITORING.md)
 
 ---
 
 ## 下一步
 
 - � [安全架構](SECURITY.md)
-- 📊 [成本優化策略](../guides/COST_OPTIMIZATION.md)
-- ⚙️ [配置管理](../guides/CONFIGURATION.md)
-- 📋 [部署指南](../deployment/DEPLOYMENT_GUIDE.md)
+- 📊 [成本優化策略](COST_OPTIMIZATION.md)
+- ⚙️ [配置管理](CONFIGURATION.md)
+- 📋 [部署指南](DEPLOYMENT.md)
 
 ---
 
 **架構負責人**: Shawn Tseng  
-**最後更新**: 2026-02-13
+**最後更新**: 2026-02-21

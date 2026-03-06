@@ -13,7 +13,6 @@ var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.ConfigureFunctionsWebApplication();
 
-// Register LINE Services
 var channelAccessToken = builder.Configuration["LINE:ChannelAccessToken"] 
     ?? throw new InvalidOperationException("LINE Channel Access Token is not configured");
 
@@ -23,14 +22,11 @@ var channelSecret = builder.Configuration["LINE:ChannelSecret"]
 builder.Services.AddSingleton<ILineMessagingClient>(_ => new LineMessagingClient(channelAccessToken));
 builder.Services.AddSingleton(_ => new LineSignatureValidator(channelSecret));
 
-// Register HttpClient for KeepWarmTimer
 builder.Services.AddHttpClient();
 
-// Register Azure Storage for Conversation History
 var storageConnectionString = builder.Configuration["AzureWebJobsStorage"]
     ?? throw new InvalidOperationException("AzureWebJobsStorage is not configured");
 
-// Register TableServiceClient
 builder.Services.AddSingleton<TableServiceClient>(serviceProvider =>
 {
     return new TableServiceClient(storageConnectionString);
@@ -42,14 +38,32 @@ builder.Services.AddSingleton<ConversationHistoryService>(serviceProvider =>
     return new ConversationHistoryService(storageConnectionString, logger);
 });
 
-// Register Prompt Provider
+builder.Services.AddSingleton<UserModeService>(serviceProvider =>
+{
+    var logger = serviceProvider.GetRequiredService<ILogger<UserModeService>>();
+    return new UserModeService(storageConnectionString, logger);
+});
+
+builder.Services.AddSingleton<ManageCommandService>(serviceProvider =>
+{
+    var logger = serviceProvider.GetRequiredService<ILogger<ManageCommandService>>();
+    var manageLineUserId = builder.Configuration["Manage:LineUserId"] ?? string.Empty;
+    return new ManageCommandService(
+        logger,
+        serviceProvider.GetRequiredService<ConversationHistoryService>(),
+        serviceProvider.GetRequiredService<UserModeService>(),
+        serviceProvider.GetRequiredService<PromptProvider>(),
+        serviceProvider.GetRequiredService<Kernel>(),
+        serviceProvider.GetRequiredService<ILineMessagingClient>(),
+        manageLineUserId);
+});
+
 builder.Services.AddSingleton<PromptProvider>(serviceProvider =>
 {
     var logger = serviceProvider.GetRequiredService<ILogger<PromptProvider>>();
     return new PromptProvider(logger);
 });
 
-// Register Semantic Kernel with Azure OpenAI
 builder.Services.AddSingleton<Kernel>(serviceProvider =>
 {
     var kernelBuilder = Kernel.CreateBuilder();
@@ -72,7 +86,7 @@ builder.Services.AddSingleton<Kernel>(serviceProvider =>
     return kernelBuilder.Build();
 });
 
-// Register Application Insights TelemetryClient
 builder.Services.AddSingleton<TelemetryClient>();
 
 builder.Build().Run();
+

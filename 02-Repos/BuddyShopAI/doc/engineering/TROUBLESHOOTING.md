@@ -204,7 +204,7 @@ customEvents
 | order by count_ desc
 ```
 
-**調整**: 修改 `ConversationHistoryService.cs` 中的 `_maxQuestionsPerHour` 值。
+**調整**: 使用量追蹤已改為 Application Insights 指標（`UserRequestsPerHour`），不再限制付費客戶使用。
 
 ---
 
@@ -228,4 +228,4 @@ kill -9 <PID>
 
 ---
 
-需要更多協助? [開 Issue](https://github.com/ShawnTseng/88mrvShopAI/issues)
+需要更多協助? [開 Issue](https://github.com/ShawnTseng/BuddyShopAI/issues)

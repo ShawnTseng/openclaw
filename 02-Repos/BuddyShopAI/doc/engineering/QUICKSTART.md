@@ -49,8 +49,8 @@ Azure Functions (.NET 8)
 
 ```bash
 # 1. Clone 專案
-git clone https://github.com/ShawnTseng/88mrvShopAI.git
-cd 88mrvShopAI
+git clone https://github.com/ShawnTseng/BuddyShopAI.git
+cd BuddyShopAI
 
 # 2. 設定環境變數
 cp local.settings.json.example local.settings.json
@@ -73,7 +73,7 @@ ngrok http 7071
 
 ## 雲端部署（生產環境）
 
-詳細步驟請參考：[部署指南](../deployment/DEPLOYMENT_GUIDE.md)
+詳細步驟請參考：[部署指南](DEPLOYMENT.md)
 
 ### 快速部署流程
 
@@ -127,10 +127,10 @@ func azure functionapp logstream mytenant-func
 ## 下一步
 
 - 📖 [本地開發環境設定](LOCAL_DEVELOPMENT.md)
-- ☁️ [完整部署指南](../deployment/DEPLOYMENT_GUIDE.md)
-- ⚙️ [配置管理](../guides/CONFIGURATION.md)
+- ☁️ [完整部署指南](DEPLOYMENT.md)
+- ⚙️ [配置管理](CONFIGURATION.md)
 - 👥 [客戶上線流程](../business/ONBOARDING.md)
 
 ---
 
-**問題?** 查看 [故障排除](../deployment/TROUBLESHOOTING.md) 或聯繫維護者
+**問題?** 查看 [故障排除](TROUBLESHOOTING.md) 或聯繫維護者

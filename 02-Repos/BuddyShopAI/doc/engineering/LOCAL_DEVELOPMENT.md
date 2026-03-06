@@ -44,8 +44,8 @@ choco install ngrok
 ### 1. Clone 專案
 
 ```bash
-git clone https://github.com/ShawnTseng/88mrvShopAI.git
-cd 88mrvShopAI
+git clone https://github.com/ShawnTseng/BuddyShopAI.git
+cd BuddyShopAI
 ```
 
 ### 2. 還原依賴
@@ -232,9 +232,9 @@ func start --port 7072
 
 ## 下一步
 
-- 📦 [部署到 Azure](../deployment/DEPLOYMENT_GUIDE.md)
-- ⚙️ [配置管理](../guides/CONFIGURATION.md)
-- 🏗️ [架構總覽](../architecture/OVERVIEW.md)
+- 📦 [部署到 Azure](DEPLOYMENT.md)
+- ⚙️ [配置管理](CONFIGURATION.md)
+- 🏗️ [架構總覽](ARCHITECTURE.md)
 
 ---
 

@@ -1,6 +1,6 @@
 # 💰 成本優化策略
 
-> 如何將每租戶成本控制在 $3 USD/月以內
+> 如何將每租戶成本控制在 $10 USD/月以內（含無冷啟動保證）
 
 ---
 
@@ -8,12 +8,13 @@
 
 | 服務 | 月成本 | 優化策略 |
 |------|--------|---------|
-| Azure OpenAI | $2-3 | 訊息防抖、速率限制 |
-| Functions | $0 | 免費額度 (1M 次/月) |
+| Azure OpenAI | $2-3 | 訊息防抖、使用量追蹤 |
+| Functions (Flex Prod) | ~$5 | Always Ready 1 instance，無冷啟動 |
+| Functions (Staging) | $0 | Consumption Plan 免費額度 |
 | Storage | $0.01 | 僅儲存對話歷史 |
 | Key Vault | $0.03 | 最少 Secrets |
 | App Insights | $0 | 免費 5GB/月 |
-| **總計** | **$2.50** | |
+| **總計** | **~$7.50** | |
 
 ---
 
@@ -41,13 +42,15 @@ Context = System Prompt + 最近10則對話 + 新訊息
 約 500-1000 tokens per request
 ```
 
-### 3. 速率限制（10問/時）
+### 3. 使用量追蹤（Application Insights）
 
-防止單用戶濫用
+透過 `UserRequestsPerHour` 自訂指標監控用量，不限制付費客戶使用（v1.1.0 已移除硬性速率限制）。
 
-### 4. Consumption Plan
+### 4. Flex Consumption Plan + Always Ready
 
-零固定成本，完全按用量付費
+Production 使用 Flex Consumption Plan (FC1)，Always Ready 1 instance 避免冷啟動。
+成本僅 ~$5/月，遠低於 Premium Plan (~$158/月)。
+Staging 維持 Consumption Plan，完全按用量付費。
 
 ---
 
@@ -85,5 +88,5 @@ az consumption budget create \
 
 ---
 
-**目標**: 每租戶 < $3 USD/月  
-**當前**: $2.50 USD/月 ✅
+**目標**: 每租戶 < $10 USD/月（含無冷啟動保證）  
+**當前**: ~$7.50 USD/月 ✅

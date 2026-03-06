@@ -1,0 +1,58 @@
+name: Provision Infrastructure
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: '部署環境'
+        required: true
+        default: 'staging'
+        type: choice
+        options: [staging, production]
+      customer:
+        description: '目標客戶'
+        required: true
+        default: 'mrvshop'
+        type: choice
+        options: [mrvshop, guban]
+
+env:
+  CUSTOMER: ${{ github.event.inputs.customer || 'mrvshop' }}
+
+jobs:
+  provision:
+    name: 'Provision ${{ github.event.inputs.environment }} / ${{ github.event.inputs.customer || ''mrvshop'' }}'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set variables
+        run: |
+          ENV="${{ github.event.inputs.environment }}"
+          if [ "$ENV" = "production" ]; then
+            echo "RG=rg-${{ env.CUSTOMER }}-prod" >> $GITHUB_ENV
+            echo "PARAMS=infra/main.parameters.${{ env.CUSTOMER }}.json" >> $GITHUB_ENV
+          else
+            echo "RG=rg-${{ env.CUSTOMER }}-staging" >> $GITHUB_ENV
+            echo "PARAMS=infra/main.parameters.${{ env.CUSTOMER }}.json" >> $GITHUB_ENV
+          fi
+
+      - uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: What-if
+        run: |
+          az deployment group what-if \
+            --resource-group ${{ env.RG }} \
+            --template-file infra/main.bicep \
+            --parameters @${{ env.PARAMS }} environment=${{ github.event.inputs.environment }}
+
+      - name: Deploy
+        run: |
+          az deployment group create \
+            --resource-group ${{ env.RG }} \
+            --template-file infra/main.bicep \
+            --parameters @${{ env.PARAMS }} environment=${{ github.event.inputs.environment }}
