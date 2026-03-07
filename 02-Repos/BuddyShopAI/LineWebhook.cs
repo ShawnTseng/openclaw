@@ -226,7 +226,10 @@ public class LineWebhook
 
                 await _historyService.SaveMessageAsync(userId, "assistant", responseText);
 
-                if (responseText.Contains("轉接給專人") || responseText.Contains("轉接專人"))
+                if (responseText.Contains("轉接給專人") || responseText.Contains("轉接專人") ||
+                    responseText.Contains("轉接給真人") || responseText.Contains("轉接真人") ||
+                    responseText.Contains("轉給專人") || responseText.Contains("由人工") ||
+                    responseText.Contains("交由專人"))
                 {
                     _logger.LogInformation(
                         "🔄 Auto-handoff detected for user {UserId}. Switching to human mode. OperationId: {OperationId}",
@@ -367,11 +370,20 @@ public class LineWebhook
         string operationId,
         int maxRetries = 3)
     {
+        var executionSettings = new PromptExecutionSettings
+        {
+            ExtensionData = new Dictionary<string, object>
+            {
+                ["temperature"] = 0,
+                ["max_tokens"] = 2048
+            }
+        };
+
         for (int attempt = 0; attempt < maxRetries; attempt++)
         {
             try
             {
-                return await chatService.GetChatMessageContentAsync(history);
+                return await chatService.GetChatMessageContentAsync(history, executionSettings);
             }
             catch (Microsoft.SemanticKernel.HttpOperationException ex) when (ex.Message.Contains("429"))
             {

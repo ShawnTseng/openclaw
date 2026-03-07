@@ -33,8 +33,14 @@ public class PromptProvider
 
     public async Task<string> GetSystemPromptAsync()
     {
-        var knowledgeBase = await GetStoreKnowledgeBaseAsync();
-        return $"你是一個服飾電商的智慧客服小幫手。請依據以下商店資訊回答顧客的問題：\n\n{knowledgeBase}";
+        var config = await LoadStoreConfigAsync();
+        var knowledgeBase = BuildKnowledgeBase(config);
+        return $"你是 {config.StoreName} 的 AI 客服系統。你的核心工作流程是：\n" +
+               $"1. 判斷客人的問題屬於哪個 FAQ 類別\n" +
+               $"2. 如果該 FAQ 有 [範本]，必須 100% 原封不動、逐字照貼範本內容回覆客人，一個字都不能改、不能省略、不能重組、不能用自己的話改寫\n" +
+               $"3. 如果該 FAQ 只有 [知識]，才可以用自己的話根據知識內容回答\n" +
+               $"4. [指令] 是你的行為指引，照做但不要把指令內容發給客人\n\n" +
+               $"{knowledgeBase}";
     }
 
     private async Task<StoreConfig> LoadStoreConfigAsync()

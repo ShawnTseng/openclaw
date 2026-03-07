@@ -11,14 +11,10 @@
             "id": "3ca7043f424920a2",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "memory/photo-migration-automation.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "photo-migration-automation"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           }
         ]
@@ -185,6 +181,11 @@
   },
   "active": "3ca7043f424920a2",
   "lastOpenFiles": [
+    "01-Daily/2026-03-07.md",
+    "memory/business-ideas-tracker.md",
+    "02-Repos/Content-Matrix/Drafts/003-prompt-engineering-over-code-logic.md",
+    "memory/2026-03-06.md",
+    "memory/photo-migration-automation.md",
     "memory/MEMORY.md",
     "memory/icloud-google-drive-strategy.md",
     "memory/google-drive-folders.md",
@@ -216,11 +217,6 @@
     "2026-02-13.md",
     "memory/2026-02-14.md",
     "03-Strategy/High-Margin-Business-Models.md",
-    "01-Daily/2026-02-14-OpenClaw-SaaS-Todo.md",
-    "02-Projects/OpenClaw-SaaS-Business-Plan.md",
-    "MEMORY.md",
-    "Shawn.md",
-    "HEARTBEAT.md",
     "Untitled.canvas"
   ]
 }

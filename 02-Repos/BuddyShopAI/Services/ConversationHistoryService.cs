@@ -78,6 +78,12 @@ public class ConversationHistoryService
 
             messages = messages.OrderBy(m => m.RowKey).ToList();
 
+            // Cap to last N messages to prevent context overflow
+            if (messages.Count > _maxHistoryMessages * 2)
+            {
+                messages = messages.Skip(messages.Count - _maxHistoryMessages * 2).ToList();
+            }
+
             foreach (var msg in messages)
             {
                 if (msg.Role == "user")
