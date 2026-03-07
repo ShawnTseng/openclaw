@@ -1,6 +1,6 @@
 # MEMORY.md - Long-Term Memory
 
-> **Last updated:** 2026-02-17 (4AM Breakthrough Session)
+> **Last updated:** 2026-03-06 (BuddyShopAI production milestone + Cron optimization)
 > **Context:** Main Session Only (Protected)
 > **Structure:** [P0] Core > [P1] Active > [P2] Context
 
@@ -94,35 +94,60 @@
 
 **Decision Point:** Post-Japan trip (late Feb 2026)
 
-### 3. BuddyShopAI (DevOps Showcase)
-- **Status:** **P0 Priority** (Cloned; Config pending).
-- **Tech:** .NET 8 API + Next.js 14 App Router + Azure Container Apps.
-- **Positioning:** Not just a SaaS product, but a **"DevOps/Platform Engineering Portfolio Piece"**.
-- **Key Features to Highlight:**
-  - Infrastructure as Code (Bicep templates)
-  - Automated CI/CD pipelines (GitHub Actions)
-  - Container orchestration (Azure Container Apps)
-  - AI Ops integration (Semantic Kernel for log analysis)
-  - GitOps workflow
-- **Strategy:** AI SDR for Real Estate/Insurance (high-margin, commission model).
-- **Action:** Configure `local.settings.json` & Launch.
+### 3. BuddyShopAI (Production Client Project)
+- **Status:** **ACTIVE - Production Deployment** (mrvshop tenant live since 2026-02-26)
+- **Client:** mrvshop (66MRV / 88MRV fashion e-commerce)
+- **Recent Milestone (2026-03-06):**
+  - Client broke 168+ hour silence with template-based response requirement
+  - Implemented in 4.5-5 hours (29 commits) using **Prompt Engineering** approach
+  - Key insight: `[範本]` tags + `temperature=0` > building `TemplateMatchingService.cs`
+  - Deployed: 20+ FAQ scenarios, auto-handoff, multi-message splitting, QA automation
+- **Tech Stack:** .NET 8 Azure Functions + LINE Messaging API + Azure OpenAI + Semantic Kernel
+- **Architecture Highlights:**
+  - Prompt Engineering for 100% exact responses (no keyword matching code needed)
+  - `[SPLIT]` mechanism for multi-bubble LINE messages
+  - Context overflow protection (auto-trim conversation history)
+  - Auto-handoff to human agents (7 trigger keywords)
+- **Revenue Impact:** Critical for migration financial evidence (awaiting deposit/consultancy fee)
+- **Key Learning:** Simpler solutions (prompt design) often beat complex architectures (new services/logic)
 
-### 4. LocalRAG (Enterprise Data Privacy)
+### 4. SeafoodAI (New B2B Opportunity)
+- **Status:** **DISCOVERY** (Project initiated 2026-03-06)
+- **Contact:** 呂以恆 (via Nathan referral)
+- **Industry:** Seafood wholesale / B2B distribution automation
+- **Hypothesized Needs:** AI to replace sales staff (quotes, customer service, order tracking, logistics)
+- **Strategic Value:**
+  - Second B2B automation project (validates expertise pattern)
+  - Potential retainer model (vs. one-time project fee)
+  - Learning from BuddyShopAI template approach can be applied
+- **Current Stage:** Awaiting client LINE contact for discovery meeting
+- **Repo:** Private GitHub repo established with comprehensive docs (README, TODO, REQUIREMENTS, CLIENT_HYPOTHESIS, MEETING_PREP, INDUSTRY_RESEARCH)
+- **Next Actions:** Schedule first discovery call, prepare BuddyShopAI demo
+
+### 5. LocalRAG (Enterprise Data Privacy)
 - **Status:** Ready for Pilot.
 - **Tech:** Ollama, pgvector, Docker.
 - **Target:** Law/Accounting firms (Data sovereignty as selling point).
 - **Positioning:** Part of "Trustless AI Workflows" content strategy.
 
-### 5. OpenClaw System Optimization (Sammy Lin's Protocol)
-- **Status:** Implemented 2026-02-17.
-- **Changes:**
-  - ✅ Memory Hierarchy: P0 (Core) / P1 (Active <90d) / P2 (Context <30d)
-  - ✅ Protocol: Markdown First, Sub-Agent Offloading, Issue-First approach
-  - ✅ Weekly Self-Reflection: Cron job (Sunday 22:00) added
-  - ✅ All cron jobs now report to correct Discord channel (#system-log)
+### 6. OpenClaw System Optimization
+- **Status:** Continuously refined.
+- **Major Updates:**
+  - **2026-02-17:** Sammy Lin's Protocol implemented
+    - Memory Hierarchy: P0 (Core) / P1 (Active <90d) / P2 (Context <30d)
+    - Protocol: Markdown First, Sub-Agent Offloading, Issue-First approach
+    - Weekly Self-Reflection: Cron job (Sunday 22:00)
+    - All cron jobs report to correct Discord channel (#system-log)
+  - **2026-03-06:** Cron Notification Optimization
+    - Morning notifications reduced from 3 → 1 (66% reduction)
+    - Disabled: Daily AI Signal (06:53), Daily Crypto Pulse (06:56)
+    - Added: Weekly AI Highlights (Sun 08:00), Weekly Crypto Analysis (Sun 09:00)
+    - Rationale: Aligned with Shawn's week-level trading strategy and need for signal-only info
+    - Morning Brief moved to 07:00, simplified to P0 priorities only
 - **Philosophy:** "Don't build an assistant; design a self-operating system."
+- **Current Active Cron Jobs:** 10 (5 daily, 5 weekly)
 
-### 6. OpenClaw Portfolio (Meta-Repo)
+### 7. OpenClaw Portfolio (Meta-Repo)
 - **Status:** Live & Auto-syncing.
 - **Strategy:** `~/.openclaw/workspace` as living technical resume.
 - **GitHub:** https://github.com/ShawnTseng/openclaw
