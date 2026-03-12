@@ -65,7 +65,7 @@ var configPath = $"configs/{tenantId}.json";
 | `AzureOpenAI__Endpoint` | OpenAI 端點 | `https://{tenant}-openai-prod.openai.azure.com/` |
 | `AzureOpenAI__ApiKey` | OpenAI Key | Key Vault Reference |
 | `AzureOpenAI__DeploymentName` | 模型名稱 | `gpt-4o-mini` |
-| `Manage__LineUserId` | 管理員 LINE UserId | 用於接收自動轉接通知 |
+| `Manage__LineUserIds` | 管理員 LINE UserIds（逗號分隔，支援多組） | 用於 LINE 指令授權與自動轉接通知 |
 
 > ⚠️ **Azure Functions 保留路由警告**：Azure Functions 平台保留了 `/api/admin/` 路徑（用於系統管理端點）。
 > 請勿在 Function 路由或環境變數前綴中使用 `Admin` / `admin`，一律改用 `Manage` / `manage`。
@@ -86,7 +86,7 @@ var configPath = $"configs/{tenantId}.json";
     "AzureOpenAI__Endpoint": "https://your-openai.openai.azure.com/",
     "AzureOpenAI__ApiKey": "YOUR_KEY",
     "AzureOpenAI__DeploymentName": "gpt-4o-mini",
-    "Manage__LineUserId": "YOUR_LINE_USER_ID"
+    "Manage__LineUserIds": "YOUR_LINE_USER_ID_1,YOUR_LINE_USER_ID_2"
   }
 }
 ```

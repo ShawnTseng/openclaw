@@ -292,6 +292,22 @@ Production 使用 Flex Consumption + Always Ready，不需要 keep-warm。
 ./scripts/deploy-app.sh mrvshop production    # 部署到 Production
 ```
 
+### deploy-settings.sh — 同步 App Settings 到 Azure
+
+將 `local.settings.json` 的環境變數推送到 Azure Function App。
+`AzureWebJobsStorage` 和 `FUNCTIONS_WORKER_RUNTIME` 會自動略過（Azure 有獨立設定）。
+
+```bash
+./scripts/deploy-settings.sh <tenant-id> [environment] [settings-file]
+
+# 範例
+./scripts/deploy-settings.sh mrvshop production                         # 推送到 Production
+./scripts/deploy-settings.sh mrvshop staging                            # 推送到 Staging
+./scripts/deploy-settings.sh mrvshop production ./local.settings.json   # 指定設定檔
+```
+
+> 新增或修改 `Manage__LineUserIds`、`AzureOpenAI__ApiKey` 等設定時使用。
+
 ### deploy-all.sh — 批量部署所有租戶
 
 ```bash
@@ -319,7 +335,7 @@ Production 使用 Flex Consumption + Always Ready，不需要 keep-warm。
 | `AzureWebJobsStorage` | 直接值 | Storage Account 連線字串 |
 | `APPLICATIONINSIGHTS_CONNECTION_STRING` | 直接值 | Application Insights |
 | `Manage__ApiKey` | 直接值 | 管理 API 認證金鑰 |
-| `Manage__LineUserId` | 直接值 | 管理員 LINE UserId（LINE 指令授權） |
+| `Manage__LineUserIds` | 直接值 | 管理員 LINE UserIds，逗號分隔（支援多組，LINE 指令授權） |
 
 ### 本地開發
 

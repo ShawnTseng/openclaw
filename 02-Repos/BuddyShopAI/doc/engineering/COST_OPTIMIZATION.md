@@ -9,7 +9,7 @@
 | 服務 | 月成本 | 優化策略 |
 |------|--------|---------|
 | Azure OpenAI | $2-3 | 訊息防抖、使用量追蹤 |
-| Functions (Flex Prod) | ~$5 | Always Ready 1 instance，無冷啟動 |
+| Functions (Flex Prod) | ~$5 | Always Ready 1 instance (512 MB)，無冷啟動 |
 | Functions (Staging) | $0 | Consumption Plan 免費額度 |
 | Storage | $0.01 | 僅儲存對話歷史 |
 | Key Vault | $0.03 | 最少 Secrets |
@@ -51,6 +51,16 @@ Context = System Prompt + 最近10則對話 + 新訊息
 Production 使用 Flex Consumption Plan (FC1)，Always Ready 1 instance 避免冷啟動。
 成本僅 ~$5/月，遠低於 Premium Plan (~$158/月)。
 Staging 維持 Consumption Plan，完全按用量付費。
+
+> ⚠️ **Always Ready Baseline 計費**：Flex Consumption 以 GB-s 計費 ($0.000004/GB-s)。
+> `instanceMemoryMB` 設為 **512 MB** —— .NET 8 webhook handler 實際用量約 150-200 MB，512 MB 已充裕。
+> 若誤設為 2048 MB，每月 baseline 成本從 ~$5 暴增至 ~$21，請務必確認 Bicep 設定正確。
+>
+> | instanceMemoryMB | Baseline 月成本 | 日均成本 |
+> |-----------------|----------------|----------|
+> | 512 MB ✅       | ~$5.2 USD      | ~$8 TWD  |
+> | 1024 MB         | ~$10.4 USD     | ~$16 TWD |
+> | 2048 MB ❌      | ~$20.7 USD     | ~$32 TWD |
 
 ---
 

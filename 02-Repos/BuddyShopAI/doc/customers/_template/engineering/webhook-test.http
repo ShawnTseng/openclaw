@@ -1,0 +1,78 @@
+### ======================================================
+### LINE Webhook & Health 手動測試（公版）
+###
+### 使用方式：
+###   1. 複製整個 customers/_template/ 到 customers/{tenant}/
+###   2. 將 @baseUrlProd / @baseUrlStaging 改為該客戶的 Function App URL
+###   3. 填入 @lineChannelSecret 與 @testUserId
+###
+### 簽章產生方式（X-Line-Signature）：
+###   BODY='<json body 原始字串>'
+###   SIG=$(echo -n "$BODY" | openssl dgst -sha256 -hmac "$LINE_CHANNEL_SECRET" -binary | base64)
+###   echo "X-Line-Signature: $SIG"
+### ======================================================
+
+@baseUrlProd    = https://{tenant}-func.azurewebsites.net/api
+@baseUrlStaging = https://{tenant}-func-staging.azurewebsites.net/api
+@baseUrl        = {{baseUrlProd}}
+
+@lineChannelSecret = YOUR_LINE_CHANNEL_SECRET
+@testUserId        = Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# ──────────────────────────────────────────────
+# 1. Health Check
+# ──────────────────────────────────────────────
+
+### Health Check - Production
+GET {{baseUrlProd}}/health
+
+### Health Check - Staging
+GET {{baseUrlStaging}}/health
+
+# ──────────────────────────────────────────────
+# 2. Webhook 連通測試（空事件陣列）
+#    ⚠️ 需要填入正確的 X-Line-Signature，否則回傳 401
+# ──────────────────────────────────────────────
+
+### Webhook Verify（空事件 - 模擬 LINE Verify 按鈕）
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: REPLACE_WITH_VALID_SIGNATURE
+
+{
+  "destination": "Utest123",
+  "events": []
+}
+
+# ──────────────────────────────────────────────
+# 3. 模擬真實 LINE 訊息事件
+#    ⚠️ 需要有效 X-Line-Signature
+# ──────────────────────────────────────────────
+
+### 模擬用戶傳送文字訊息（需有效 signature）
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: REPLACE_WITH_VALID_SIGNATURE
+
+{
+  "destination": "Utest123",
+  "events": [
+    {
+      "type": "message",
+      "message": {
+        "type": "text",
+        "id": "999999999",
+        "text": "你好，請問幾天到貨？"
+      },
+      "webhookEventId": "test-event-001",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1708502400000,
+      "source": {
+        "type": "user",
+        "userId": "{{testUserId}}"
+      },
+      "replyToken": "EXPIRED_REPLY_TOKEN_WILL_FALLBACK_TO_PUSH",
+      "mode": "active"
+    }
+  ]
+}

@@ -1,0 +1,700 @@
+### ======================================================
+### BuddyShopAI QA 情境測試（LINE Webhook）
+###
+### 用途：
+###   手動測試 — 安裝 VS Code REST Client，點擊 Send Request，
+###              在 LINE 上觀察實際回覆，對照 doc/mrvshop-qa.md 驗收標準
+###   自動測試 — scripts/qa-smoke.sh 自動執行（驗證 HTTP 200）
+###
+### 驗收標準：doc/mrvshop-qa.md（同一 Q01–Q24 情境 ID）
+### 一致性原則：新增情境時，三份文件同步更新：
+###             1. doc/mrvshop-qa.md（行為定義）
+###             2. doc/engineering/qa-scenarios.http（手動觸發）
+###             3. scripts/qa-smoke.sh（CI 煙霧測試）
+###
+### 簽章產生（每次請求 body 不同，需個別產生）：
+###   BODY='{"destination":"Utest","events":[...]}'
+###   SIG=$(echo -n "$BODY" | openssl dgst -sha256 -hmac "$SECRET" -binary | base64)
+###   → 複製 SIG 填入 @signature
+### ======================================================
+
+### 共用變數（切換環境只需改 @baseUrl）
+@baseUrlProd    = https://mrvshop-func.azurewebsites.net/api
+@baseUrlStaging = https://mrvshop-func-staging.azurewebsites.net/api
+@baseUrl        = {{baseUrlStaging}}
+
+# 測試用 LINE User ID（填入測試帳號的 UID）
+@testUserId = Uxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# 每次發送前，用上方的簽章產生指令計算對應請求的 signature
+@signature = REPLACE_WITH_VALID_SIGNATURE
+
+
+# ==============================================================
+# 01. 庫存與現貨
+# 驗收標準：doc/mrvshop-qa.md § 01
+# ==============================================================
+
+### [Q01] 詢問有無現貨
+# 預期：分 2 則訊息
+#   第 1 則：含「海外調貨」「10-20」「10-12」；不含「有現貨」「現貨充足」
+#   第 2 則：含「熱門款式」「越快下單越好」；不含「有現貨」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q01", "text": "有現貨嗎" },
+      "webhookEventId": "qa-Q01",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q01",
+      "mode": "active"
+    }
+  ]
+}
+
+###
+
+### [Q02] 詢問是否隨時有貨 / 會不會補貨
+# 預期：1 則訊息
+#   必含：「代購」「10-20天」「越快下單越好」
+#   不含：「隨時都有」「固定補貨」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q02", "text": "賣完會補貨嗎" },
+      "webhookEventId": "qa-Q02",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q02",
+      "mode": "active"
+    }
+  ]
+}
+
+
+# ==============================================================
+# 02. 尺寸相關
+# 驗收標準：doc/mrvshop-qa.md § 02
+# ==============================================================
+
+###
+
+### [Q03] 詢問身高體重推薦尺寸
+# 預期：1 則訊息
+#   必含：「各品牌版型不同」「尺寸對照表」
+#   不含：「建議你穿」「推薦 M/L」「穿 S/M/L」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q03", "text": "身高170體重60穿什麼尺寸" },
+      "webhookEventId": "qa-Q03",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q03",
+      "mode": "active"
+    }
+  ]
+}
+
+###
+
+### [Q04] 詢問鞋款尺寸換算
+# 預期：1 則訊息
+#   必含：「womenshealthmag.com」「歐洲尺碼」
+#   不含：「US9 等於」「換算為」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q04", "text": "鞋號怎麼換算" },
+      "webhookEventId": "qa-Q04",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q04",
+      "mode": "active"
+    }
+  ]
+}
+
+
+# ==============================================================
+# 03. 贈品
+# 驗收標準：doc/mrvshop-qa.md § 03
+# ==============================================================
+
+###
+
+### [Q05] 詢問贈品如何選
+# 預期：分 3 則訊息
+#   第 1 則：含「reurl.cc/VYpGRA」「完售」「手動登記」；不含「下單贈品」
+#   第 2 則：含「買二送一」「買四送二」
+#   第 3 則：含「已下單未選到」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q05", "text": "贈品怎麼選" },
+      "webhookEventId": "qa-Q05",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q05",
+      "mode": "active"
+    }
+  ]
+}
+
+
+# ==============================================================
+# 04. 物流與到貨
+# 驗收標準：doc/mrvshop-qa.md § 04
+# ==============================================================
+
+###
+
+### [Q06] 查詢特定訂單物流進度（已下單）
+# 預期：1 則訊息，收集三項資訊
+#   必含：「訂單姓名」「下單」「EMAIL」
+#   不含：「正在運送中」「已出貨」「預計明天到」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q06", "text": "我的貨到哪裡了" },
+      "webhookEventId": "qa-Q06",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q06",
+      "mode": "active"
+    }
+  ]
+}
+
+###
+
+### [Q07] 一般到貨天數詢問（尚未下單）
+# 預期：分 3 則訊息
+#   第 1 則：含「10-20」「10-12」
+#   第 2 則：含「全額付款」「8-12」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q07", "text": "下單後幾天到貨" },
+      "webhookEventId": "qa-Q07",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q07",
+      "mode": "active"
+    }
+  ]
+}
+
+###
+
+### [Q08] 客人要求到貨或寄出時通知
+# 預期：1 則訊息
+#   必含：「物流編號」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q08", "text": "到的時候跟我說" },
+      "webhookEventId": "qa-Q08",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q08",
+      "mode": "active"
+    }
+  ]
+}
+
+
+# ==============================================================
+# 05. 斷貨改款
+# 驗收標準：doc/mrvshop-qa.md § 05
+# ==============================================================
+
+###
+
+### [Q09] 斷貨改款 - 收到通知需改款
+# 預期：分 2 則訊息
+#   第 1 則：含「精選商品」「當季商品」
+#   第 2 則：含「訂購姓名」「EMAIL」「編號」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q09", "text": "收到通知商品沒了要改款" },
+      "webhookEventId": "qa-Q09",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q09",
+      "mode": "active"
+    }
+  ]
+}
+
+###
+
+### [Q10] 斷貨改款是否要選相同價位
+# 預期：1 則訊息
+#   必含：「不用挑選相同價位」「多退少補」
+#   不含：「必須挑相同價位」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q10", "text": "改款要選一樣價錢的嗎" },
+      "webhookEventId": "qa-Q10",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q10",
+      "mode": "active"
+    }
+  ]
+}
+
+###
+
+### [Q11] 斷貨改款是否補足件數
+# 預期：1 則訊息
+#   必含：「補足件數」「優惠」
+#   不含：「必須補足」「強制」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q11", "text": "一定要挑斷貨的件數嗎" },
+      "webhookEventId": "qa-Q11",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q11",
+      "mode": "active"
+    }
+  ]
+}
+
+###
+
+### [Q12] 斷貨改款後物流（二次補寄）
+# 預期：1 則訊息
+#   必含：「二次補寄」「運費」
+#   不含：「一起寄」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q12", "text": "改款的商品會一起寄還是分開寄" },
+      "webhookEventId": "qa-Q12",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q12",
+      "mode": "active"
+    }
+  ]
+}
+
+###
+
+### [Q13] 斷貨不想改款（第一階段）- 婉轉引導
+# 預期：1 則訊息（不轉接）
+#   必含：「折扣」「行政手續」
+#   不含：「好的我們幫你退款」「可以退款」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q13", "text": "我不想改款了" },
+      "webhookEventId": "qa-Q13",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q13",
+      "mode": "active"
+    }
+  ]
+}
+
+
+# ==============================================================
+# 06. 售後服務
+# 驗收標準：doc/mrvshop-qa.md § 06
+# ==============================================================
+
+###
+
+### [Q14] 收到商品有瑕疵 - 收集訂單資訊
+# 預期：1 則訊息
+#   必含：「訂單姓名」「下單」「EMAIL」
+#   不含：「退款」「我們馬上補寄」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q14", "text": "收到商品有瑕疵" },
+      "webhookEventId": "qa-Q14",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q14",
+      "mode": "active"
+    }
+  ]
+}
+
+###
+
+### [Q15] 退換貨詢問
+# 預期：1 則訊息
+#   必含：「沒有提供退貨」「換貨」「工本費」
+#   不含：「可以退貨」「退款沒問題」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q15", "text": "可以退貨嗎" },
+      "webhookEventId": "qa-Q15",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q15",
+      "mode": "active"
+    }
+  ]
+}
+
+###
+
+### [Q16] 換貨流程（第一階段）- 只告知規則，不發表單
+# 預期：1 則訊息
+#   必含：「$200」「工本費」
+#   不含：「取貨門市」「商品截圖」「1.姓名」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q16", "text": "我要換貨" },
+      "webhookEventId": "qa-Q16",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q16",
+      "mode": "active"
+    }
+  ]
+}
+
+###
+
+### [Q17] 訂單尚未寄出想換貨
+# 預期：1 則訊息
+#   必含：「截圖」「編號」
+#   不含：「$200」「工本費」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q17", "text": "東西還沒寄出能換嗎" },
+      "webhookEventId": "qa-Q17",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q17",
+      "mode": "active"
+    }
+  ]
+}
+
+###
+
+### [Q18] 未收到完整商品（少件）
+# 預期：1 則訊息
+#   必含：「訂購姓名」「聯絡電話」
+#   不含：「正在調查中」「已安排補寄」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q18", "text": "少件" },
+      "webhookEventId": "qa-Q18",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q18",
+      "mode": "active"
+    }
+  ]
+}
+
+
+# ==============================================================
+# 07. 付款與訂金
+# 驗收標準：doc/mrvshop-qa.md § 07
+# ==============================================================
+
+###
+
+### [Q19] 訂金繳費流程（第一階段）- 收集姓名電話
+# 預期：1 則訊息
+#   必含：「訂購姓名」
+#   不含：「ATM」「超商代碼」「匯款」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q19", "text": "訂金怎麼繳" },
+      "webhookEventId": "qa-Q19",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q19",
+      "mode": "active"
+    }
+  ]
+}
+
+###
+
+### [Q20] 訂金是否扣抵尾款
+# 預期：1 則訊息
+#   必含：「250」「尾款」「貨到付款」
+#   不含：「不會扣抵」「全額重新付」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q20", "text": "訂金會扣掉嗎" },
+      "webhookEventId": "qa-Q20",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q20",
+      "mode": "active"
+    }
+  ]
+}
+
+
+# ==============================================================
+# 08. 其他情境
+# 驗收標準：doc/mrvshop-qa.md § 08
+# ==============================================================
+
+###
+
+### [Q21] 商品選項異常（顏色/尺寸消失）- 轉接專人
+# 預期：1 則訊息（轉接）
+#   必含：「訂購姓名」「聯絡電話」
+#   不含：「那個顏色已售完」「建議選其他顏色」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q21", "text": "顏色選項消失了" },
+      "webhookEventId": "qa-Q21",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q21",
+      "mode": "active"
+    }
+  ]
+}
+
+###
+
+### [Q22] 客人情緒激動 - 立即轉接專人
+# 預期：1 則訊息（轉接）
+#   必含：「轉接」
+#   不含：「您這樣說很過分」「我們沒有義務」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q22", "text": "你們這家店太爛了，我要投訴" },
+      "webhookEventId": "qa-Q22",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q22",
+      "mode": "active"
+    }
+  ]
+}
+
+###
+
+### [Q23] 客人只丟出個資但未說明需求
+# 預期：1 則訊息（不假設需求）
+#   必含：「Dear」
+#   不含：「物流狀態」「查詢您的訂單」「已為您處理」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q23", "text": "王小明 3/1 下單 test@gmail.com" },
+      "webhookEventId": "qa-Q23",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q23",
+      "mode": "active"
+    }
+  ]
+}
+
+###
+
+### [Q24] 詢問簡訊是否為店家發出 - 轉接專人
+# 預期：1 則訊息（轉接）
+#   必含：「無法確認」「轉接」
+#   不含：「是的，我們有發」「那不是我們發的」
+POST {{baseUrl}}/LineWebhook
+Content-Type: application/json
+X-Line-Signature: {{signature}}
+
+{
+  "destination": "Utest",
+  "events": [
+    {
+      "type": "message",
+      "message": { "type": "text", "id": "qa-Q24", "text": "請問這是你們的簡訊嗎" },
+      "webhookEventId": "qa-Q24",
+      "deliveryContext": { "isRedelivery": false },
+      "timestamp": 1741305600000,
+      "source": { "type": "user", "userId": "{{testUserId}}" },
+      "replyToken": "qa-reply-Q24",
+      "mode": "active"
+    }
+  ]
+}

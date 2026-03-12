@@ -29,6 +29,33 @@ Insights    的 check
 
 ## 部署相關
 
+### Flex Consumption 成本異常偏高
+
+**症狀**: Azure 帳單 Function App 每天 ~$20+ TWD，詠高於預期 $8 TWD
+
+**原因**: `instanceMemoryMB` 誤設為 2048，Flex Always Ready baseline 按 GB-s 計費
+
+**立即修正（不需 redeploy）**:
+```bash
+az functionapp scale config set \
+  --name mrvshop-func \
+  --resource-group rg-mrvshop-prod \
+  --instance-memory 512
+
+# 驗證
+ az functionapp scale config show \
+  --name mrvshop-func \
+  --resource-group rg-mrvshop-prod \
+  --output table
+```
+
+| instanceMemoryMB | 月成本 | 日均 |
+|---|---|---|
+| 512 ✅ | ~$5 USD | ~$8 TWD |
+| 2048 ❌ | ~$21 USD | ~$32 TWD |
+
+---
+
 ### Bicep 部署失敗
 
 **問題**: `Resource 'Microsoft.CognitiveServices/accounts' not found`

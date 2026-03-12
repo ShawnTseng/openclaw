@@ -110,11 +110,11 @@
   訊息防抖和速率限制使用 In-Memory Dictionary，Consumption Plan instance 回收後重置。  
   目前可接受（速率限制重置 = 對用戶更寬鬆），但若需嚴格限制，可改用 Table Storage 或 Redis。
 
-- [ ] **單元測試**  
-  目前無任何測試。優先考慮：
-  - `LineSignatureValidator` 簽章驗證
-  - `ConversationHistoryService` 防抖邏輯
-  - `PromptProvider` 知識庫載入
+- [x] ~~**QA 驗收測試自動化**~~ ✅  
+  已建立 Vitest + YAML 測試框架（8 分類、24 案例、72 輸入）：
+  - YAML 單一事實來源 → 自動測試 + 自動產生客戶驗收文件
+  - GitHub Actions `qa.yml`（YAML 驗證 + AI 測試 + 文件產生）
+  - 待擴充：`LineSignatureValidator`、`ConversationHistoryService` 等 xUnit 單元測試
 
 - [ ] **Prompt 工程優化**  
   根據實際用戶對話數據，持續調優 System Prompt：
@@ -141,3 +141,4 @@
 - [x] Key Vault RBAC 角色設定
 - [x] 部署區域決策（East US，優先可用性）
 - [x] README.md 全面改版（Buddy ShopAI 品牌）
+- [x] QA 驗收測試自動化（Vitest + YAML + GitHub Actions qa.yml）

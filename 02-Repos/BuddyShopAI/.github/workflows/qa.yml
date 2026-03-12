@@ -1,0 +1,74 @@
+name: QA Smoke Test
+
+on:
+  # 在每次部署到 staging 完成後自動觸發
+  workflow_run:
+    workflows: ['Deploy to Azure Functions']
+    types: [completed]
+    branches: [dev]
+
+  # 手動觸發（可選擇環境與租戶）
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: '測試目標環境'
+        required: true
+        default: 'staging'
+        type: choice
+        options: [staging, production]
+      customer:
+        description: '目標客戶'
+        required: true
+        default: 'mrvshop'
+        type: choice
+        options: [mrvshop, guban]
+
+  # PR 變更 configs/ 或 QA 文件時觸發（防止行為回歸）
+  pull_request:
+    paths:
+      - 'configs/**'
+      - 'doc/mrvshop-qa.md'
+      - 'Services/PromptProvider.cs'
+      - 'scripts/qa-smoke.sh'
+
+env:
+  CUSTOMER: ${{ github.event.inputs.customer || 'mrvshop' }}
+  ENVIRONMENT: ${{ github.event.inputs.environment || 'staging' }}
+
+jobs:
+  smoke:
+    name: 'QA Smoke / ${{ github.event.inputs.environment || ''staging'' }} / ${{ github.event.inputs.customer || ''mrvshop'' }}'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    # workflow_run 觸發時，只在部署成功後執行
+    if: >-
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
+
+    # 根據環境使用對應的 GitHub Environment（存放 Secrets）
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run QA smoke tests
+        run: bash scripts/qa-smoke.sh
+        env:
+          WEBHOOK_URL: ${{ vars.WEBHOOK_URL }}
+          LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
+          TEST_USER_ID: ${{ vars.QA_TEST_USER_ID }}
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## QA Smoke Test" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| 項目 | 值 |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|-----|" >> $GITHUB_STEP_SUMMARY
+          echo "| 環境 | ${{ env.ENVIRONMENT }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 客戶 | ${{ env.CUSTOMER }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 驗收標準 | [doc/mrvshop-qa.md](doc/mrvshop-qa.md) |" >> $GITHUB_STEP_SUMMARY
+          echo "| 手動測試 | [doc/engineering/qa-scenarios.http](doc/engineering/qa-scenarios.http) |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "> ⚠️ 本次自動測試只驗證 HTTP 200（端點可達性），AI 回覆品質請對照驗收清單手動確認。" >> $GITHUB_STEP_SUMMARY

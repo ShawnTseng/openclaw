@@ -270,3 +270,7 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+# QA Test Runner (Vitest / TypeScript)
+tests/.env
+tests/node_modules/
+tests/reports/

@@ -47,7 +47,9 @@ builder.Services.AddSingleton<UserModeService>(serviceProvider =>
 builder.Services.AddSingleton<ManageCommandService>(serviceProvider =>
 {
     var logger = serviceProvider.GetRequiredService<ILogger<ManageCommandService>>();
-    var manageLineUserId = builder.Configuration["Manage:LineUserId"] ?? string.Empty;
+    var manageLineUserIdsRaw = builder.Configuration["Manage:LineUserIds"] ?? string.Empty;
+    var manageLineUserIds = manageLineUserIdsRaw
+        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
     return new ManageCommandService(
         logger,
         serviceProvider.GetRequiredService<ConversationHistoryService>(),
@@ -55,7 +57,7 @@ builder.Services.AddSingleton<ManageCommandService>(serviceProvider =>
         serviceProvider.GetRequiredService<PromptProvider>(),
         serviceProvider.GetRequiredService<Kernel>(),
         serviceProvider.GetRequiredService<ILineMessagingClient>(),
-        manageLineUserId);
+        manageLineUserIds);
 });
 
 builder.Services.AddSingleton<PromptProvider>(serviceProvider =>

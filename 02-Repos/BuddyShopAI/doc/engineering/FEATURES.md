@@ -53,7 +53,7 @@
 |------|------|
 | 多租戶架構 | Cell-based，每客戶獨立 Resource Group，完全隔離 |
 | Infrastructure as Code | Bicep 模組化（Storage, Key Vault, OpenAI, Functions, App Insights） |
-| CI/CD Pipeline | GitHub Actions：deploy, promote, provision, keep-warm（config-zip 部署） |
+| CI/CD Pipeline | GitHub Actions：deploy, promote, provision, keep-warm, **qa**（config-zip 部署 + QA 驗收） |
 | Key Vault 密鑰管理 | Managed Identity + RBAC，零明文密鑰 |
 | Flex Consumption | Production Always Ready 1 instance，零冷啟動 |
 
@@ -68,6 +68,15 @@
 | Keep-Warm | Timer Trigger（5 分鐘）+ GitHub Actions 外部 ping（4 分鐘），僅 Staging |
 | 使用量追蹤 | Application Insights 自訂指標：UserRequestsPerHour, OpenAIResponseTime |
 | Application Insights | 自動收集 Requests / Dependencies / Exceptions / Traces |
+
+### QA 驗收自動化
+
+| 功能 | 說明 |
+|------|------|
+| YAML 測試案例 | `tests/qa/{tenant}/*.yaml`，單一事實來源，8 分類 24 項 72 個輸入 |
+| Vitest 自動測試 | TypeScript 執行器，關鍵詞比對 + 訊息數量 + 轉接判斷 |
+| 客戶驗收文件產生 | YAML → Markdown 自動產生，可轉 Word 交客戶簽核 |
+| GitHub Actions QA | PR 自動 YAML 驗證、手動觸發 AI 測試、驗收文件更新檢查 |
 
 ---
 
@@ -95,7 +104,7 @@
 
 | 項目 | 說明 |
 |------|------|
-| 單元測試 | 核心 Service 的自動化測試 |
+| 單元測試 | ✅ QA 驗收測試已完成（Vitest + YAML）；待擴充：核心 Service 的 xUnit 單元測試 |
 | AppVersion 集中管理 | 目前 ManageApi.cs 和 ManageCommandService.cs 各自維護版號 |
 | In-Memory 狀態 | `_rateLimitTracker` 在多實例時不共享 |
 
@@ -115,6 +124,10 @@
 | `Services/PromptProvider.cs` | 多租戶知識庫載入 |
 | `Services/LineSignatureValidator.cs` | Webhook 簽章驗證 |
 | `configs/{tenant}.json` | 商店知識庫配置 |
+| `tests/qa/{tenant}/*.yaml` | QA 驗收測試案例（單一事實來源） |
+| `tests/runner/*.ts` | Vitest 測試執行器（TypeScript） |
+| `tests/scripts/generate-qa-doc.ts` | 客戶驗收文件產生器 |
+| `doc/{tenant}-qa.md` | 自動產生的客戶驗收文件 |
 | `infra/main.bicep` | 基礎設施定義 |
 
 ---

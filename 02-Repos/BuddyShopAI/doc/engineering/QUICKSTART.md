@@ -13,7 +13,7 @@
 - ⚡ **Serverless 架構** - Azure Functions，按用量付費
 - 🤖 **AI 驅動** - Azure OpenAI gpt-4o-mini
 - 👥 **多租戶** - 每個品牌獨立資源，完全隔離
-- 💰 **超低成本** - 每租戶約 $78 TWD/月
+- 💰 **超低成本** - 每租戶約 $240 TWD/月（~$7.50 USD，含 Flex Consumption 無冷啟動）
 - 🔐 **安全可靠** - Key Vault + Managed Identity
 
 ---

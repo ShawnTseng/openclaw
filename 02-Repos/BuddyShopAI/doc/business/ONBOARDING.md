@@ -109,7 +109,25 @@ az keyvault secret set --vault-name kv${TENANT_ID}prod* \
 
 ## 5️⃣ 上線驗證（功能測試）
 
-### 測試清單
+### 自動化 QA 測試（優先執行）
+
+> 📋 詳細說明：[tests/README.md](../../tests/README.md)  
+> 📝 驗收文件：[doc/mrvshop-qa.md](../mrvshop-qa.md)
+
+```bash
+cd tests
+
+# 1. YAML 格式驗證（免費，不呼叫 API）
+QA_DRY_RUN=1 npx vitest run
+
+# 2. 完整 AI 回應測試（呼叫 OpenAI API）
+npx vitest run
+
+# 3. 產生客戶驗收文件（轉 Word 交客戶簽核）
+npm run generate:qa-doc
+```
+
+### 手動驗證清單（補充自動化未涵蓋的端對端場景）
 
 | # | 測試項目 | 預期結果 | 實際結果 |
 |---|---------|---------|---------|

@@ -134,7 +134,7 @@ resource functionAppFlex 'Microsoft.Web/sites@2024-04-01' = if (useFlexConsumpti
           }
         ]
         maximumInstanceCount: 40
-        instanceMemoryMB: 2048
+        instanceMemoryMB: 512
       }
       runtime: {
         name: 'dotnet-isolated'

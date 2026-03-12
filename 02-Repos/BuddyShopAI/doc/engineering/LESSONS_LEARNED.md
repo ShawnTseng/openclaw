@@ -159,7 +159,16 @@ az vm list-usage --location eastus --query "[?limit > '0']"
 - 零明文密鑰暴露風險
 - Managed Identity 無需管理 credential rotation
 - RBAC 比 Access Policy 更精細可控
+### ADR-005: Flex Consumption instanceMemoryMB 設定
 
+**決策**：`instanceMemoryMB: 512`  
+**原因**：
+- .NET 8 webhook handler 實際記憶體用量約 150-200 MB，512 MB 已充裕
+- Flex Consumption Always Ready 以 GB-s 計費 baseline ($0.000004/GB-s)
+- `instanceMemoryMB: 2048` 會導致每月多支約 $16 USD（約 $500 TWD）
+- 修正方式：`az functionapp scale config set --instance-memory 512`（立即生效，不需 redeploy）
+
+**教訓**：新建 Flex Consumption app 後必須檢查 `instanceMemoryMB`。預設值 2048 MB 對於 輕量 webhook 超額配置。
 ---
 
 ## 成本優化策略
@@ -187,6 +196,8 @@ az vm list-usage --location eastus --query "[?limit > '0']"
 | App Insights | $0 (免費額度) |
 | **總計** | **~$2.50 USD/月 (~78 TWD)** |
 
+> ⚠️ 上表為 v1.0 初期 Consumption Plan 架構估算。升級至 Flex Consumption (v1.2.0+) 後，實際成本請參考 [COST_OPTIMIZATION.md](COST_OPTIMIZATION.md)。
+
 ---
 
 ## 變更歷史
@@ -197,6 +208,7 @@ az vm list-usage --location eastus --query "[?limit > '0']"
 | v0.3 | 2026-02-12 | Azure OpenAI、對話逾時、速率限制 |
 | v0.2 | 2026-02-11 | 對話歷史 (Table Storage)、訊息防抖 |
 | v0.1 | 初始版本 | LINE Bot + Google Gemini + IMemoryCache |
+| v1.4 | 2026-03-06 | 多組管理員、deploy-settings.sh、修正 instanceMemoryMB |
 
 ---
 

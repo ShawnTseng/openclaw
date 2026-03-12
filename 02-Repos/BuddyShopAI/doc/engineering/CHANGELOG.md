@@ -4,6 +4,27 @@
 
 ---
 
+## v1.4.0 - 2026-03-06
+
+### ✨ 功能
+
+- 支援多組管理員 LINE UserId（`Manage__LineUserIds`，逗號分隔）
+
+### 🏗️ 架構
+
+- `ManageCommandService`：`_manageLineUserId`（單一字串）改為 `_manageLineUserIds`（`HashSet<string>`），`IsManager()` 使用 `Contains()` 判斷
+- `Program.cs`：讀取 `Manage:LineUserIds` 並以逗號分割
+- 新增 `scripts/deploy-settings.sh`：將 `local.settings.json` 同步到 Azure 各環境
+- Bicep 修正 `instanceMemoryMB` 2048 → 512，Production 月成本降回 ~$7.50 USD（原誤設導致 ~$27 USD/月）
+
+### 📚 文檔
+
+- 所有文件 `Manage__LineUserId` 更名為 `Manage__LineUserIds`
+- DEPLOYMENT.md 新增 `deploy-settings.sh` 使用說明
+- COST_OPTIMIZATION.md 新增 Always Ready instanceMemoryMB 成本對照表
+
+---
+
 ## v1.3.0 - 2026-02-22
 
 ### ✨ 功能

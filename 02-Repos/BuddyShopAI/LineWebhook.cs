@@ -244,8 +244,8 @@ public class LineWebhook
                         ["trigger"] = "AI response contains handoff keyword"
                     });
 
-                    var manageUserId = Environment.GetEnvironmentVariable("Manage__LineUserId");
-                    if (!string.IsNullOrEmpty(manageUserId))
+                    var manageUserIds = _manageCommandService.GetManagerIds();
+                    foreach (var manageUserId in manageUserIds)
                     {
                         string displayName;
                         try

@@ -14,7 +14,7 @@ public class ManageCommandService
     private readonly PromptProvider _promptProvider;
     private readonly Kernel _kernel;
     private readonly ILineMessagingClient _lineClient;
-    private readonly string _manageLineUserId;
+    private readonly HashSet<string> _manageLineUserIds;
 
     private const string AppVersion = "1.3.0";
 
@@ -25,7 +25,7 @@ public class ManageCommandService
         PromptProvider promptProvider,
         Kernel kernel,
         ILineMessagingClient lineClient,
-        string manageLineUserId)
+        IEnumerable<string> manageLineUserIds)
     {
         _logger = logger;
         _historyService = historyService;
@@ -33,11 +33,13 @@ public class ManageCommandService
         _promptProvider = promptProvider;
         _kernel = kernel;
         _lineClient = lineClient;
-        _manageLineUserId = manageLineUserId;
+        _manageLineUserIds = new HashSet<string>(manageLineUserIds, StringComparer.Ordinal);
     }
 
     public bool IsManager(string userId) =>
-        !string.IsNullOrEmpty(_manageLineUserId) && userId == _manageLineUserId;
+        _manageLineUserIds.Count > 0 && _manageLineUserIds.Contains(userId);
+
+    public IReadOnlyCollection<string> GetManagerIds() => _manageLineUserIds;
 
     public bool IsManageCommand(string message) =>
         message.TrimStart().StartsWith("/manage", StringComparison.OrdinalIgnoreCase);

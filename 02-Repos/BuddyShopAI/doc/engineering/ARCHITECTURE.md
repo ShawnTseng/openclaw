@@ -78,11 +78,13 @@ Tenant: mrvshop                    Tenant: guban
 | 認證 | Function Level |
 
 **選擇理由**:
-- Flex Consumption + Always Ready 1 instance，無冷啟動
+- Flex Consumption + Always Ready 1 instance (512 MB)，無冷啟動
 - 成本僅 ~$5/月，遠低於 Premium Plan (~$158/月)
 - Staging 維持 Consumption Plan 節省成本
 - 自動擴展（最多 40 instances），應對流量波動
 - 與 Azure 生態整合完美
+
+> ⚠️ **注意**：`instanceMemoryMB` 必須設為 **512**，誤設為 2048 會導致 baseline 成本暴增 4 倍（~$5 → ~$21 USD/月）。
 
 ### 2. Azure OpenAI（AI 引擎）
 
