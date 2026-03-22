@@ -181,6 +181,8 @@
   },
   "active": "3ca7043f424920a2",
   "lastOpenFiles": [
+    "daily/2026-03-22.md",
+    "memory/cron-reference.md",
     "repos/frontend/src/features/governance/styles/governance.module.scss",
     "repos/frontend/src/features/governance/styles/StatisticsPanel.module.scss",
     "repos/frontend/src/features/governance/styles/ProposalsFeed.module.scss",
@@ -191,7 +193,6 @@
     "repos/frontend/src/features/governance/styles/MiniProposalCard.module.scss",
     "repos/frontend/src/features/governance/styles/ActionWithChainOption.module.scss",
     "repos/frontend/src/features/governance/hooks/useGovernanceProposals.ts",
-    "repos/frontend/src/features/governance/components/VoteChart.tsx",
     "repos/frontend/public/vite.svg",
     "repos/frontend/README.md",
     "repos/fluffyflint/todo.md",
@@ -217,7 +218,6 @@
     "repos/BuddyShopAI/doc/README.md",
     "repos/BuddyShopAI/ROADMAP.md",
     "repos/BuddyShopAI/README.md",
-    "repos/BuddyShopAI/CLAUDE.md",
     "02-Repos/frontend/public/vite.svg",
     "Untitled.canvas"
   ]

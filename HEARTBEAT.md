@@ -1,13 +1,16 @@
 # HEARTBEAT.md - Proactive Checks
 
-> **Purpose:** Opportunistic system health checks when messages are received.
+> **Purpose:** Opportunistic checks when a session starts or a message is received.
 
-## 🕒 Routine Checks (Rotate)
-- **Inbox:** Check for urgent emails from Partner Visa or Clients.
-- **Calendar:** Next 48h agenda.
-- **Health:** Remind Shawn to take medication/water if idle for >4h.
-- **System:** Check if `sync-git.sh` ran successfully last night.
+## 🕒 Routine Checks (pick one per session, rotate)
 
-## ⚠️ Alerts
-- If `sync.log` shows errors, notify immediately.
-- If Partner Visa deadline (2026-06-05) < 30 days, escalate priority.
+- **Visa blocker:** Are passports back from Philippine agent? If yes, flag 英文版產權證明 as next action.
+- **BuddyShopAI:** Any client feedback pending? Check `repos/BuddyShopAI` git log.
+- **Health:** If Shawn seems to have been working >4h, remind medication/water.
+- **Git sync:** Check if `daily/` has an entry for today. If not, remind to log.
+
+## ⚠️ Escalate Immediately
+
+- Visa consultant Mike replies → update `life/visa/` and MEMORY.md
+- BuddyShopAI production error → treat as P0
+- Mortgage or loan payment due within 7 days

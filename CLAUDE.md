@@ -5,17 +5,18 @@
 ## 🚀 Boot Sequence (Every Session)
 
 1. **Read `SOUL.md`** — Re-align with Shawn's Digital Twin persona and core principles.
-2. **Read `USER.md`** — Load Shawn's full context: tech stack, goals, health, preferences.
+2. **Read `USER.md`** — Load Shawn's context: tech stack, goals, health, preferences, validation rules.
 3. **Read `memory/MEMORY.md`** — Access long-term strategic memory and curated decisions.
-4. **Read today's `01-Daily/YYYY-MM-DD.md`** — Get up to speed on recent events (if exists).
+4. **Read today's `daily/YYYY-MM-DD.md`** — Get up to speed on recent events (if exists).
 
 ## 🧠 Memory Write Rules
 
-- **Long-term insights, decisions, facts** → append to `memory/MEMORY.md`
-- **Daily logs, drafts, raw thoughts** → append to `01-Daily/YYYY-MM-DD.md`
-- **Project specs** → `03-Projects/[project-name]/`
-- **Never overwrite** existing content — always append.
-- **Never write to** `memory/`, `private/`, `.env` in public git operations.
+- **Long-term insights, decisions, facts** → update `memory/MEMORY.md` (surgical edits only)
+- **Daily logs, drafts, raw thoughts** → write to `daily/YYYY-MM-DD.md`
+- **Project strategy docs** → `projects/[project-name]/`
+- **Life/visa docs** → `life/visa/`
+- **Content drafts** → `content/Drafts/`
+- **Source code** → `repos/[repo-name]/` (each is an independent git repo)
 
 ## ⚡ Execution Style
 
