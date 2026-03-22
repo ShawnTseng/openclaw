@@ -1,6 +1,6 @@
 # MEMORY.md - Long-Term Memory
 
-> **Last updated:** 2026-03-22 (Full audit — all files scanned, all sources verified)
+> **Last updated:** 2026-03-23 (Mac Mini setup complete, Cowork 4 tasks configured)
 > **Structure:** [P0] Core > [P1] Active > [P2] Context (expires ~30d) > [Future Backlog] > [Graveyard]
 
 ---
@@ -48,6 +48,7 @@
 - **openclaw git:** 只追蹤知識庫（docs, memory, daily, life, projects, content）
 - **Dev branch:** `dev`（BuddyShopAI, frontend）
 - **MCP tools:** obsidian-vault（讀寫檔案）+ shell（執行 git）
+- **Cowork Scheduled Tasks:** 4 tasks on Mac Mini（Daily Wrap, Weekly Intelligence, Weekly Review, Weekly System Check）
 
 ---
 
@@ -79,8 +80,8 @@
 - ✅ AZ-104 certified；✅ Japan trip completed (2026-02-23 ~ 03-05)
 
 ### 4. OpenClaw System
-- **Status:** ⏸ 暫停 — GitHub Copilot 額度快用完
-- **Resume plan:** 2026-04-01 後重新評估
+- **Status:** 🟢 **Active on Mac Mini** — Cowork 4 scheduled tasks running
+- **Prompts:** `memory/cron-reference.md`
 
 ---
 
@@ -96,6 +97,10 @@
 ### BuddyShopAI Week 1
 - 每日 client review；Dashboard 先 assess 現有 code
 
+### 未完成事項
+- [ ] openclaw GitHub repo 改成 private（github.com/ShawnTseng/openclaw → Settings → Change visibility）
+- [ ] boot sequence 路徑驗證（下次新對話確認是否讀到 `daily/`）
+
 ---
 
 ## [Future Backlog] 低機率但值得記著
@@ -105,15 +110,7 @@
 - **定價構想：** $499/月
 - **種子客戶：** 朋友的客家餐廳（未訪談，需確認是否有 POS）
 - **技術複用：** BuddyShopAI 技術棧
-- **時機：** 2026-07 後，視 BuddyShopAI 穩定度決定
-
-### Hyperliquid Whale Tracker
-- **概念：** 鏈上大戶持倉追蹤工具（Hyperliquid DEX），散戶能看到「莊家的牌」
-- **商業模式：** Freemium — 基礎版開源，Premium $50-100/月
-- **技術：** Python + Hyperliquid API，2-3 週可出 MVP
-- **參考競品：** Nansen（$150/月）、Glassnode（$800/月）
-- **時機：** 2026 Q4，澳洲生活穩定後再評估；現在每月花 1-2 小時關注生態即可
-- **API：** https://hyperliquid.gitbook.io/hyperliquid-docs
+- **時機：** 2026-07 後
 
 ---
 
@@ -146,7 +143,8 @@
 | fluffyflint | Ting 個人網站，未持續 follow-up。Repo 保留 | 2026-03-22 |
 | frontend (Cardano DApp) | sovx-dev org，暫停。Repo 保留 | 2026-03-22 |
 | LocalRAG | 與 BuddyShopAI 重疊，暫停。Repo 保留 | 2026-03-22 |
-| OpenClaw Cron Jobs | 系統暫停 | 2026-03-22 |
+| Hyperliquid Whale Tracker | 沒興趣了，刪除 | 2026-03-23 |
+| OpenClaw Cron Jobs (old) | 舊系統已廢棄，由 Cowork 取代 | 2026-03-23 |
 | OpenClaw SaaS Plan | 早期探索，未驗證 | 2026-03-22 |
 | Google Antigravity (Gemini) | 已被 Claude Desktop 取代 | 2026-03-22 |
 
@@ -158,6 +156,7 @@
 |------|------|
 | BuddyShopAI Repo | `repos/BuddyShopAI` (dev) |
 | BuddyShopAI Next Phase | `projects/BuddyShopAI/Next-Phase-Strategy.md` |
+| Cron Reference | `memory/cron-reference.md` |
 | Resume | `content/Drafts/ShawnTseng-Resume-2026-Architect.md` |
 | Visa Statement (Shawn) | `life/visa/Visa-Statement-Shawn.md` |
 | Visa Checklist | `life/visa/Visa-Checklist.md` |

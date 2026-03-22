@@ -3,18 +3,18 @@
 > **Last updated:** 2026-03-23
 > **Target:** Cowork Scheduled Tasks (Claude Sonnet 4.6)
 > **Workspace:** `/Users/tsengjiyang/Desktop/projects/openclaw`
-> **Status:** Ready to configure. Use this file to set up Cowork tasks.
+> **Status:** Active — 4 tasks configured in Cowork.
 
 ---
 
 ## Setup
 
-Each task must boot with:
+Each task boots with:
 1. Read `SOUL.md` — persona
 2. Read `USER.md` — preferences and validation rules
 3. Read `memory/MEMORY.md` — current context
 
-Tone, format, and validation rules live in SOUL.md / USER.md. Do not repeat them in job prompts.
+Tone, format, and validation rules live in SOUL.md / USER.md. Do not repeat in job prompts.
 
 ---
 
@@ -33,48 +33,37 @@ GitHub:     https://github.com/ShawnTseng
 
 ---
 
-## Jobs (4 total)
-
----
+## Active Jobs (4)
 
 ### 1. Daily Wrap
 **Schedule:** Every day at 23:00 (Asia/Taipei)
 
 ```
-Daily Wrap:
+Read these files first:
+- /Users/tsengjiyang/Desktop/projects/openclaw/SOUL.md
+- /Users/tsengjiyang/Desktop/projects/openclaw/USER.md
+- /Users/tsengjiyang/Desktop/projects/openclaw/memory/MEMORY.md
 
-1. Boot: read SOUL.md, USER.md, memory/MEMORY.md
+Then:
 
-2. Check today's GitHub activity at https://github.com/ShawnTseng
-   Repos: openclaw, BuddyShopAI
-   Note commits, PRs, issues from today only.
+1. Check today's GitHub activity at https://github.com/ShawnTseng
+   (repos: openclaw, BuddyShopAI)
 
-3. Write daily/YYYY-MM-DD.md (use today's actual date):
+2. Write today's daily log to /Users/tsengjiyang/Desktop/projects/openclaw/daily/YYYY-MM-DD.md
+   (use today's actual date):
    ## What Happened
-   [Key events, decisions, blockers]
-
    ## GitHub Activity
-   [Commits summary or "No commits"]
-
    ## Insights
-   [1–2 observations worth keeping]
+   ## Tomorrow's Focus (based on MEMORY.md P0/P1 only)
 
-   ## Tomorrow's Focus
-   [Top 1–2 priorities from MEMORY.md]
+3. Update /Users/tsengjiyang/Desktop/projects/openclaw/memory/MEMORY.md if needed.
+   Surgical edits only — update changed project statuses, remove P2 items older than 30 days.
+   Skip entirely if nothing significant changed.
 
-4. Update memory/MEMORY.md if needed:
-   - New project status changes → update P1
-   - Completed P2 items or items older than 30 days → remove
-   - Surgical edits only. Do NOT rewrite wholesale.
-   - If nothing changed: skip.
+4. Run in terminal:
+   cd /Users/tsengjiyang/Desktop/projects/openclaw && git add -A && git commit -m "chore: daily wrap $(date +%Y-%m-%d)" --allow-empty && git push origin main
 
-5. Git sync:
-   cd /Users/tsengjiyang/Desktop/projects/openclaw
-   git add -A
-   git commit -m "chore: daily wrap $(date +%Y-%m-%d)" --allow-empty
-   git push origin main
-
-6. Report to Discord: one-line status + git result.
+5. Report one-line completion status.
 ```
 
 ---
@@ -83,25 +72,21 @@ Daily Wrap:
 **Schedule:** Every Sunday at 09:00 (Asia/Taipei)
 
 ```
-Weekly Intelligence:
+Read /Users/tsengjiyang/Desktop/projects/openclaw/USER.md for filter criteria.
 
-1. Boot: read USER.md for filter criteria.
-
-2. AI Highlights — search past 7 days for MAJOR events only:
-   Filter (from USER.md): GPT-5/Claude 4-level releases, API price changes >50%,
-   open-source models beating GPT-4, major acquisitions or AI regulations.
+1. AI Highlights — search past 7 days for MAJOR events only:
+   Filter: GPT-5/Claude 4-level releases, API price changes >50%,
+   open-source models beating GPT-4, major AI acquisitions or regulations.
    If nothing qualifies: "No significant AI news this week."
 
-3. Crypto Analysis — search:
+2. Crypto Analysis — search:
    - Bitcoin price vs 200 Week Moving Average
    - Bitcoin ETF weekly net flows
    - Curve 3pool USDT %
-   - Wyckoff phase
+   - Wyckoff phase (accumulation/distribution/markup/markdown)
+   Score: 200WMA 40% + ETF flows 30% + Wyckoff 20% + USDT risk 10%
 
-   Score (from USER.md): 200WMA 40% + ETF flows 30% + Wyckoff 20% + USDT risk 10%
-
-4. Output:
-
+Output:
 # 📡 Weekly Intelligence — [Week of YYYY-MM-DD]
 
 ## AI
@@ -121,24 +106,24 @@ Weekly Intelligence:
 **Schedule:** Every Sunday at 20:00 (Asia/Taipei)
 
 ```
-Weekly Review:
+Read these files:
+- /Users/tsengjiyang/Desktop/projects/openclaw/memory/MEMORY.md
+- This week's files in /Users/tsengjiyang/Desktop/projects/openclaw/daily/
 
-1. Boot: read memory/MEMORY.md and this week's daily/ logs.
-
-2. Reflection:
+1. Reflection — be specific, not generic:
    - What actually got done this week?
-   - What got blocked or delayed? Why?
-   - Any pattern worth noting?
-   Output: 4–6 specific bullets. Avoid generic observations.
+   - What got blocked or delayed, and why?
+   - One pattern worth noting?
+   Output: 4–6 bullets.
 
-3. Content — identify the most interesting technical story from this week's logs:
+2. Content — find the most interesting technical story from this week's logs:
    - Angle: Cloud Platform Engineering, DevOps, or AI workflow lessons
    - Audience: AU engineering market
-   - Create draft outline in content/Drafts/NNN-topic-slug.md
-   - Update content/Backlog.md: mark as "In Progress"
-   - If nothing worth writing this week: skip and say why.
+   - Create outline in /Users/tsengjiyang/Desktop/projects/openclaw/content/Drafts/NNN-topic-slug.md
+   - Update /Users/tsengjiyang/Desktop/projects/openclaw/content/Backlog.md: mark as "In Progress"
+   - If nothing worth writing: skip and explain why.
 
-4. Output both sections to Discord.
+3. Output both sections.
 ```
 
 ---
@@ -147,38 +132,18 @@ Weekly Review:
 **Schedule:** Every Sunday at 10:00 (Asia/Taipei)
 
 ```
-Weekly System Check:
-
-1. Security: verify .gitignore covers memory/, private/, .env files.
-   Flag any sensitive files that appear tracked.
+1. Security: check /Users/tsengjiyang/Desktop/projects/openclaw/.gitignore
+   covers memory/, private/, .env — flag if any sensitive files appear tracked.
 
 2. Packages: run `brew update && brew outdated`
    Report only if >5 packages outdated or any security-related updates.
 
 3. Git health:
-   - openclaw: git status, confirm clean and synced with origin
-   - BuddyShopAI (repos/BuddyShopAI): git status
-   Flag anything not pushed.
+   - cd /Users/tsengjiyang/Desktop/projects/openclaw && git status
+   - cd /Users/tsengjiyang/Desktop/projects/openclaw/repos/BuddyShopAI && git status
+   Flag anything unpushed.
 
-4. Report: bullet list. Flag items needing action, skip noise.
-```
-
----
-
-### 5. Hyperliquid Monthly Check
-**Schedule:** 15th of each month at 20:00 (Asia/Taipei)
-
-```
-Hyperliquid Monthly Check (10 minutes):
-
-Check:
-1. Hyperliquid Twitter/Discord: new features, partnerships, TVL trend
-2. Ecosystem: any new on-chain data analysis tools (competitive watch)
-3. Community: any major sentiment shifts
-
-Save brief notes to memory/project-ideas/hyperliquid-whale-tracker.md
-Format: date + 3–5 bullet observations.
-Reference: https://hyperliquid.gitbook.io/
+4. Report as bullet list. Flag items needing action, skip noise.
 ```
 
 ---
@@ -186,19 +151,3 @@ Reference: https://hyperliquid.gitbook.io/
 ## Discord
 
 Channel ID: `1471876205765464296`
-
----
-
-## Removed Jobs
-
-| Job | Reason |
-|-----|--------|
-| Morning Brief | Replaced by on-demand new conversation |
-| Evening Routine (separate) | Merged into Daily Wrap |
-| Memory Consolidation (separate) | Merged into Daily Wrap |
-| Daily Git Sync (separate) | Merged into Daily Wrap |
-| Weekly Self-Reflection (separate) | Merged into Weekly Review |
-| Weekly Content Refinement (separate) | Merged into Weekly Review |
-| Weekly Report | Was already disabled |
-| AI Signal (daily) | Replaced by Weekly Intelligence |
-| Crypto Pulse (daily) | Replaced by Weekly Intelligence |
