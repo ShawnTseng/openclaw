@@ -11,10 +11,14 @@
             "id": "3ca7043f424920a2",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "type": "markdown",
+              "state": {
+                "file": "SOUL.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "SOUL"
             }
           }
         ]
@@ -181,6 +185,10 @@
   },
   "active": "3ca7043f424920a2",
   "lastOpenFiles": [
+    "README.md",
+    "memory/MEMORY.md",
+    "01-Daily/2026-02-14.md",
+    "00-Index/Knowledge-Portal.md",
     "01-Daily/2026-03-20.md",
     "01-Daily/2026-03-19.md",
     "01-Daily/2026-03-18.md",
@@ -213,10 +221,6 @@
     "03-Projects/Ian-Startup/2026-03-12-技術會議提問清單.md",
     "03-Projects/BuddyShopAI/Next-Phase-Strategy.md",
     "03-Projects/Ian-Startup/2026-03-12-Technical-Meeting-Questions.md",
-    "01-Daily/2026-03-10.md",
-    "01-Daily/2026-03-09.md",
-    "01-Daily/2026-03-08.md",
-    "01-Daily/2026-03-07.md",
     "Untitled.canvas"
   ]
 }

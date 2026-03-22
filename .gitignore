@@ -18,6 +18,12 @@ backup/
 tmp/
 daily-diary/
 
+# Source Code Repos (managed independently, each has own git remote)
+02-Repos/BuddyShopAI/
+02-Repos/LocalRAG/
+02-Repos/fluffyflint/
+02-Repos/frontend/
+
 # Sensitive Root Files
 USER.md
 MEMORY.md
