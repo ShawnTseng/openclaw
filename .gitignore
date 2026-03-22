@@ -9,13 +9,13 @@ auth-profiles.json
 id_rsa
 id_rsa.pub
 
-# Private
-private/
-backup/
-tmp/
+# Private content (tracked in openclaw-private repo)
+memory/
+daily/
+life/
+projects/
 
 # Source Code Repos (each has own git remote, managed independently)
-# Ignore everything under repos/ — no exceptions needed
 repos/
 
 # Sensitive Root Files
