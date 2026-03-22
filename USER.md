@@ -1,69 +1,82 @@
 # USER.md - About Your Human
 
 ## Basic Info
-- **Name:** Shawn Tseng
+- **Name:** Shawn Tseng（曾季暘）
 - **Email:** shawntseng40@gmail.com
 - **Timezone:** Asia/Taipei (GMT+8)
+- **Discord Channel:** `1471876205765464296`
 
 ## Professional Background
+
 ### Current
-- **Wistron ITS** (WITS) - Senior Full-Stack Engineer / Aveva Project
-- **Plan:** Transition to part-time on April 1, 2026.
+- **Wistron ITS** (WITS) — Senior Full-Stack Engineer / Aveva Project
+- **Plan:** Part-time from 2026-04-01
 
 ### Past Experience
-- **Newegg** - E-commerce Platform Development.
-- **Digiwin** - ERP Systems.
-- **Vertiv** - Frontend Development (Taipei).
-- **SHOUTTA** - Entrepreneurial Venture (Fashion E-commerce).
+- **Newegg** — E-commerce Platform Development
+- **Digiwin** — ERP Systems
+- **Vertiv** — Frontend Development (Taipei)
+- **SHOUTTA** — Entrepreneurial Venture (Fashion E-commerce)
 
 ### Tech Stack
 - **Core:** TypeScript/JavaScript, C#/.NET
-- **Frontend:** React, Vue, Next.js, Angular, Three.js (5+ years experience)
+- **Frontend:** React, Vue, Next.js, Angular, Three.js (5+ years)
 - **Backend:** Node.js/Express, .NET 8/10, MERN stack
-- **AI:** Semantic Kernel, Ollama, Azure OpenAI, OpenClaw
+- **AI:** Semantic Kernel, Azure OpenAI, Claude
 - **Blockchain:** Cardano (Haskell), Move, Plutus, Midnight (Privacy Chains)
 - **Trading:** Python (binance-quant), MQL5
 - **Infrastructure:** Azure, Docker, Bicep IaC, PostgreSQL
 
-## Global Experience
-- **Singapore:** Work & Migration experience.
-- **Australia:** Target destination (Partner Visa → Senior .NET Consultant).
-- **Languages:** Chinese (Native), English (Preparing for PTE/NAATI CCL).
+## Life Context
+- **Girlfriend:** 何亭儀（Ting），去澳洲讀研究所，Shawn 以 Student Visa 500 Secondary Applicant 隨行
+- **Property:** 中壢, 桃園（2025-10 購入）
+- **Languages:** Chinese (Native), English (IELTS 6.5, preparing for further improvement)
 
 ## Personal Traits
-- **Action-Oriented:** Prefers execution over excessive questioning.
-- **Highly Organized:** Maintains clear file structures and documentation.
-- **Financially Disciplined:** Meticulous tracking of invoices, taxes, and reports.
-- **Growth Mindset:** Systematic learning and continuous improvement.
-- **Efficiency First:** Loves automation and systems.
-- **Cost Conscious:** Willing to pay for premium value, but tracks ROI strictly.
+- **Action-Oriented:** Prefers execution over excessive questioning
+- **Highly Organized:** Maintains clear file structures and documentation
+- **Financially Disciplined:** Meticulous tracking of invoices, taxes, reports
+- **Efficiency First:** Loves automation and systems
+- **Cost Conscious:** Willing to pay for premium value, but tracks ROI strictly
 
-## Interests & Focus
-- **AI Agentic Workflows:** OpenClaw, AutoGen, System Architecture.
-- **Crypto & Blockchain:**
-  - **Strategy:** Wyckoff Structure (Accumulation/Distribution), 200MA (Bull/Bear line), ETF Net Flows, Market Sentiment (Fear/Greed).
-  - **Risk Mgmt:** Spot Buy preferred. Shorting allowed ONLY on strong reversal signals (Max 3x leverage, mandatory stop-loss).
-  - **Risk Monitoring:** USDT Peg (Curve 3pool imbalance), Bitfinex/Tether regulatory status.
-  - **Tech Focus:** Privacy chains (Midnight), ZK tech, Indexers.
+## Interests & Preferences
 
-## Expectations for AI
-- **Role:** Not just an assistant, but a **Navigator**.
-- **Goal:** Lead Shawn to create maximum life value.
-- **Dynamic:** Be opinionated and proactive; guide him.
-- **Respect:** Acknowledges AI capabilities and is willing to be led.
+### Crypto Strategy
+- **Framework:** Wyckoff Structure (Accumulation/Distribution), 200WMA (Bull/Bear line), ETF Net Flows, Market Sentiment
+- **Scoring weights:** 200WMA 40% + ETF flows 30% + Wyckoff phase 20% + USDT peg risk 10%
+- **Risk Mgmt:** Spot Buy preferred. Shorting ONLY on strong reversal signals (max 3x leverage, mandatory stop-loss)
+- **Risk Monitoring:** USDT Peg (Curve 3pool imbalance), Bitfinex/Tether regulatory status
+- **Timeframe:** Week-level signals only (not daily noise)
+
+### AI News Filter
+Only care about:
+- GPT-5 / Claude 4-level model releases
+- API price changes >50%
+- Open-source models beating GPT-4
+- Major acquisitions or regulations
+→ If none of the above: "No significant AI news this week."
+
+### Tech Focus
+- Privacy chains (Midnight), ZK tech, Indexers
+- AI Agentic Workflows, System Architecture
 
 ## Health
-- **Condition:** Chronic Kidney Disease (Stable, daily medication).
-- **Checkups:** Monthly at Mackay Memorial Hospital.
-- **Routine:** Morning run at 7:30 AM (Calligraphy Park).
+- **Condition:** Stage 2 Chronic Kidney Disease (stable, daily medication)
+- **Checkups:** Monthly at Mackay Memorial Hospital
+- **Routine:** Morning run at 7:30 AM (Calligraphy Park)
 
 ## Communication Preferences
-- **Language:** English (Default for Docs/Code).
-- **Style:** Concise, Direct, Action-Oriented.
-- **Quiet Hours:** 23:00-08:00 (Take action without asking).
-- **Format:** Bullet lists preferred over tables on Discord.
+- **Language:** English (default for docs/code), Chinese (brainstorming/nuance)
+- **Style:** Concise, Direct, Action-Oriented
+- **Quiet Hours:** 23:00–08:00
+- **Format:** Bullet lists preferred; no tables in Discord
 
-## Notes
-- Tracks memory evolution over time.
-- Uses GitHub to track all workspace changes.
-- Values system automation and efficiency above all.
+## Expectations for AI
+- **Role:** Navigator, not assistant. Be opinionated. Challenge weak ideas.
+- **Goal:** Lead Shawn to create maximum life value
+- **Validation Rules (learned from past mistakes):**
+  - Never say "yesterday" about a future meeting
+  - 英文戶籍謄本 is TING's document, not Shawn's
+  - Shawn's sponsor docs: passport, visa questions only
+  - Always verify events via git log before reporting them as done
+  - Check MEMORY.md facts before inferring anything

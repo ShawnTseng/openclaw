@@ -4,42 +4,44 @@
 
 ## 🚀 Boot Sequence
 
-1. **Read `SOUL.md`:** Re-align with your core persona and mission.
-2. **Read `USER.md`:** Understand Shawn's context, goals, and constraints.
-3. **Read `memory/YYYY-MM-DD.md`:** Get up to speed on recent events.
-4. **Read `MEMORY.md`:** Access long-term strategic context (Main Session Only).
+1. **Read `SOUL.md`:** Re-align with core persona and mission.
+2. **Read `USER.md`:** Understand Shawn's context, goals, preferences, and constraints.
+3. **Read `memory/MEMORY.md`:** Access long-term strategic context.
+4. **Read today's daily note at `daily/[today's date].md`** if it exists.
+
+## 🗂️ Directory Structure
+
+```
+openclaw/
+├── SOUL.md / USER.md / AGENTS.md / IDENTITY.md / TOOLS.md / HEARTBEAT.md
+├── memory/MEMORY.md      ← Long-term curated context
+├── daily/                ← Daily logs (YYYY-MM-DD.md)
+├── content/              ← Articles, resume, content strategy
+├── projects/             ← Project strategy docs (not source code)
+├── life/                 ← Visa, travel, finance, identity
+├── knowledge/            ← Technical notes (future use)
+└── repos/                ← Source code repos (each independent git, fully gitignored)
+    ├── BuddyShopAI/
+    ├── LocalRAG/
+    ├── fluffyflint/
+    └── frontend/
+```
 
 ## 🧠 Memory Protocol
 
-- **Daily Logs:** `01-Daily/YYYY-MM-DD.md` (Raw input, thoughts, drafts).
-- **Long-Term:** `memory/MEMORY.md` (Curated insights, decisions, facts).
-- **Rule:** Never rely on "mental notes". Write everything down. Text > Brain.
-- **Commit Protocol:** After creating/updating a Daily Log, immediately `git push` and reply with the GitHub link: `https://github.com/ShawnTseng/openclaw/blob/main/01-Daily/YYYY-MM-DD.md`.
+- **Daily Logs:** `daily/YYYY-MM-DD.md` — raw events, thoughts, drafts
+- **Long-Term:** `memory/MEMORY.md` — curated insights, decisions, facts
+- **Rule:** Never rely on mental notes. Markdown is truth; chat is ephemeral.
 
 ## ⚡ Execution Protocol
 
-- **Sub-Agent First:** For complex tasks (research, drafting, coding), spawn a sub-agent. Parallelize work.
-- **Issue-First:** Before writing code, define the task in a Markdown issue.
-- **Markdown is King:** All knowledge, decisions, and specs must be solidified in Markdown files. Chat is ephemeral; Markdown is eternal.
+- **Issue-First:** Before writing code, define the task in a Markdown spec.
+- **Markdown is King:** All knowledge, decisions, specs must live in Markdown.
+- **Verify before reporting:** Check git log before claiming something was done.
 
 ## 🛡️ Security & Privacy
 
-- **Private Zones:** `memory/`, `private/`, `.env` are strictly local.
-- **Public Zones:** `02-Repos/`, `00-Index/` are public-facing portfolios.
-- **Action:** Always check `.gitignore` before adding new files.
-
-## 💬 Communication
-
-- **Group Chats:** Be a participant, not a proxy. Speak only when you add value.
-- **Reactions:** Use emojis (👍, ❤️, 👀) to acknowledge without cluttering.
-- **Style:** Concise, professional English (default) or contextual Chinese.
-
-## 💓 Heartbeat & Cron
-
-- **Heartbeat:** Opportunistic checks (email, calendar) when messaged.
-- **Cron:** Scheduled tasks (Daily Git Sync at 23:55).
-- **Proactive:** Don't wait for orders. If you see a mess, clean it. If you see a risk, flag it.
-
----
-
-> *Updated for Meta-Repo Architecture 2026*
+- **Private zones:** `memory/`, `private/`, `.env` — never commit secrets
+- **Public zones:** `content/`, `knowledge/` — portfolio-safe
+- **Always check `.gitignore` before git operations**
+- **`repos/` is fully gitignored** — each repo manages its own remote
