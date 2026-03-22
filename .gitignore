@@ -10,7 +10,6 @@ id_rsa
 id_rsa.pub
 
 # Private Directories
-memory/
 private/
 03-Strategy/
 06-Life/
@@ -26,7 +25,6 @@ daily-diary/
 
 # Sensitive Root Files
 USER.md
-MEMORY.md
 Shawn.md
 
 # OS & Editor
