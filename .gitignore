@@ -17,11 +17,14 @@ backup/
 tmp/
 daily-diary/
 
-# Source Code Repos (managed independently, each has own git remote)
-02-Repos/BuddyShopAI/
-02-Repos/LocalRAG/
-02-Repos/fluffyflint/
-02-Repos/frontend/
+# Source Code Repos
+# Ignore everything under 02-Repos/ by default.
+# Only whitelisted knowledge folders are tracked.
+# Any new cloned repo here is automatically ignored — no need to update this file.
+02-Repos/*
+!02-Repos/Content-Matrix/
+!02-Repos/openclaw/
+!02-Repos/AI-Debate-Arena/
 
 # Sensitive Root Files
 USER.md
