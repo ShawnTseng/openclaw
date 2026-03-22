@@ -9,22 +9,14 @@ auth-profiles.json
 id_rsa
 id_rsa.pub
 
-# Private Directories
+# Private
 private/
-03-Strategy/
-06-Life/
 backup/
 tmp/
-daily-diary/
 
-# Source Code Repos
-# Ignore everything under 02-Repos/ by default.
-# Only whitelisted knowledge folders are tracked.
-# Any new cloned repo here is automatically ignored — no need to update this file.
-02-Repos/*
-!02-Repos/Content-Matrix/
-!02-Repos/openclaw/
-!02-Repos/AI-Debate-Arena/
+# Source Code Repos (each has own git remote, managed independently)
+# Ignore everything under repos/ — no exceptions needed
+repos/
 
 # Sensitive Root Files
 USER.md
