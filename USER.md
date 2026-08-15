@@ -80,3 +80,4 @@ Only care about:
   - Shawn's sponsor docs: passport, visa questions only
   - Always verify events via git log before reporting them as done
   - Check MEMORY.md facts before inferring anything
+  - 求職文件（cover letter、resume 等）一律不用破折號（— / –），AI 感太重，寫到就重寫成句號或改寫句子

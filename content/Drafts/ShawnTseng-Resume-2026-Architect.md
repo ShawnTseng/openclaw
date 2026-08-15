@@ -1,71 +1,131 @@
-# Shawn Tseng (Senior Cloud Platform Engineer & .NET Architect)
+# Ji Yang (Shawn) Tseng
+## Senior Cloud Platform Engineer
 
-> **Goal:** Enabling enterprise agility through Cloud-Native Architecture and DevOps automation.
-> **Location:** Taipei, Taiwan (Open to Relocation: Australia - Partner Visa in Progress)
-> **Email:** shawntseng40@gmail.com | **GitHub:** github.com/ShawnTseng
+**Email:** shawntseng40@gmail.com
+**Phone:** 0435 123 287
+**GitHub:** github.com/ShawnTseng
+**LinkedIn:** linkedin.com/in/shawntsengau
+**Portfolio:** shawn-tseng.vercel.app
+**Location:** Melbourne, Australia
+**Work Rights:** Full-time, unrestricted from 27 July 2026 (Student Visa 500)
 
-## 🚀 Professional Summary
+---
 
-**Senior Platform Engineer & .NET Architect with 10+ years of experience**, specializing in Azure cloud infrastructure and high-performance system design.
-Expert in bridging the gap between Development and Operations, delivering **robust CI/CD pipelines**, **Infrastructure as Code (IaC)**, and **scalable Microservices**.
-Proven track record in:
-*   **Platform Engineering:** Architecting Azure Container Apps/AKS environments for .NET 8 and Next.js applications.
-*   **DevOps Automation:** Reducing deployment cycles from days to minutes using Azure DevOps & GitHub Actions.
-*   **System Reliability:** Managing high-concurrency systems (10k+ QPS) with resilient design patterns and observability.
+## Professional Summary
 
-## 🛠 Skills & Expertise
+Senior engineer with 10+ years across enterprise ERP, e-commerce platforms, industrial cloud infrastructure, and AI-powered SaaS. Spent 5+ years in frontend engineering (Angular primary, React, Vue) before moving into full-stack and cloud platform roles. Core stack: .NET/C#, Azure (Functions, Service Fabric, DevOps, Bicep IaC), React/TypeScript, Semantic Kernel, Azure OpenAI. Proven ability to own full delivery cycles from architecture to CI/CD and production operations. Daily collaboration with global teams across the US, India, and UK.
 
-*   **Cloud & DevOps (Primary Focus):** 
-    *   **Infrastructure as Code:** Azure Bicep, Terraform, ARM Templates.
-    *   **CI/CD:** Azure DevOps Pipelines, GitHub Actions, Docker, Kubernetes (AKS).
-    *   **Scripting:** PowerShell, Bash, Python.
-    *   **Observability:** Application Insights, Prometheus, Grafana.
-*   **Core Architecture:** .NET 8/10 (C#), Domain-Driven Design (DDD), Microservices.
-*   **Modern Web:** Next.js (App Router), React, TypeScript.
-*   **Data & AI:** Azure SQL, PostgreSQL (pgvector), Semantic Kernel (AI Ops).
+---
 
-## 💼 Work Experience
+## Skills
 
-### Senior Full-Stack Engineer (Platform Focus) | Wistron ITS (Client: Aveva)
-*Taipei, Taiwan | 2022 - Present*
+**Frontend (5+ yrs):** Angular (primary) · React · Vue · TypeScript · AngularJS
+**Backend:** C# / .NET 6-10 · .NET Web API · .NET Framework 4.5+
+**Cloud & DevOps:** Azure (App Service, Cloud Services, Function Apps, Service Fabric, Service Bus, SQL, Key Vault, VM Image Gallery, Front Door, Log Analytics, Bicep IaC, and more) · GitHub Actions · Azure DevOps · Docker
+**AI:** Semantic Kernel · Azure OpenAI (GPT-4o / GPT-4o-mini) · AI orchestration and conversation flow design
+**Architecture:** Microservices · REST APIs · SaaS design · CI/CD pipeline design · Azure-hosted infrastructure
+**Tools:** SQL Server · Cypress · Selenium · Synopsys Black Duck · Polaris · Grafana · Git · Postman
 
-*   **Cloud Platform Modernization:** Engineered the "Cloud Hosted Platform" on Azure, enabling rapid provisioning of industrial software environments.
-*   **Infrastructure Automation:** Developed comprehensive **PowerShell and Bash scripts** to automate infrastructure provisioning, reducing setup time by **90%**.
-*   **CI/CD Implementation:** Built and maintained multi-stage pipelines in **Azure DevOps**, enforcing quality gates and automated testing.
-*   **Cost Optimization:** Re-architected on-premise legacy services to **Azure Functions (Serverless)**, cutting monthly cloud spend by 30%.
-*   **Tech Stack:** Azure (App Service, Functions, SQL), PowerShell, .NET 8, React.
+---
 
-### E-commerce Platform Lead | Newegg
-*Taipei, Taiwan | 2018 - 2022*
+## Side Project
 
-*   **High-Availability Architecture:** Designed the promotional engine handling **10k+ QPS** during Black Friday, ensuring 99.99% uptime via Redis caching strategies.
-*   **Performance Engineering:** Optimizing operational bottlenecks; split monolithic request flows into concurrent micro-tasks.
-*   **Legacy Migration:** Led the operational transition from legacy ASP.NET MVC to containerized .NET Core services.
+**BuddyShopAI** · Solo Developer · Mar 2026 – Present
+AI-powered LINE chatbot for fashion e-commerce SMBs, built as a multi-tenant SaaS with per-tenant Azure Resource Group isolation (cell-based architecture).
+- Architected and built end-to-end: Azure Functions (.NET 8 Isolated) + Semantic Kernel + Azure OpenAI (gpt-4o-mini) + LINE Messaging API, Bicep IaC, GitHub Actions CI/CD, React management dashboard
+- Designed tenant isolation, conversation handling, and human-agent handoff for production reliability
+- Live with paying customer, growing recurring revenue at 94%+ gross margin; full ownership from architecture through deployment
 
-### Senior Developer | Digiwin Software
-*Taipei, Taiwan | 2015 - 2018*
+---
 
-*   **Database Performance:** Tuned SQL Server execution plans for large-scale ERP data, improving report generation speed by 60%.
-*   **System Stability:** Reduced production incidents by implementing rigorous error handling and logging frameworks.
+## Work Experience
 
-## 🔧 Key Projects
+### Senior Full-Stack Engineer (Platform Focus)
+Wistron ITS · Client: AVEVA · Dec 2023 – Jun 2026 · Taipei, Taiwan
+- Led architecture and development for Cloud Hosted Platform (CHP), an Azure-based provisioning system supporting ~1,000 concurrent VMs for enterprise industrial software clients
+- Sole frontend engineer on the team; led development of Engineering Mode (complex image version management system) from early prototype to production, collaborating weekly with US-based product teams
+- Rewrote automated test suite from legacy .NET framework to Cypress, cutting run time from 40 minutes to 7-15 minutes via parallel execution
+- Built multi-stage Azure DevOps CI/CD pipelines; integrated Synopsys Black Duck and Polaris security scanning
+- Supported resolution of production incidents spanning 15+ Azure services (Function Apps, Service Fabric, Front Door, Service Bus, Log Analytics), tracing root causes across the platform
+- Led GitHub Copilot adoption across 4 AVEVA sub-teams (~15 engineers), achieving near-full adoption
+- Conducted ~30 technical interviews for frontend engineering roles
 
-### BuddyShopAI (DevOps Showcase)
-*   **Role:** Architect & DevOps Engineer
-*   **Infrastructure:** **Azure Container Apps**, **Bicep (IaC)**, **GitHub Actions**.
-*   **Description:** A fully automated SaaS platform for AI Real Estate agents.
-*   **DevOps Highlights:**
-    *   Implemented "GitOps" workflow for zero-downtime deployments.
-    *   Integrated **Semantic Kernel** for automated log analysis and anomaly detection (AIOps).
-    *   Secured via Azure Managed Identities and Key Vault integration.
+Tech: React · .NET Core · Azure Functions · Service Fabric · PowerShell · Azure DevOps · Cypress
 
-### OpenClaw Portfolio (Automation)
-*   **Role:** Creator
-*   **Focus:** Workflow Automation & System Integration.
-*   **Description:** A personal "Operating System" leveraging Python and Shell scripts to automate daily development tasks and knowledge management.
+### Senior Software Engineer
+Vertiv · Mar 2021 – Nov 2023 · Taipei, Taiwan
+- Led frontend development for a data center infrastructure management platform providing real-time monitoring and remote hardware control (KVM access, serial console) across enterprise data centers; stepped up as frontend team lead after the previous lead departed
+- Drove migration to monorepo architecture, improving scalability and enabling rapid UI development for new hardware products
+- Conducted performance analysis across the full product stack (software, OS, and firmware) using Grafana and k6, tracing bottlenecks beyond the application layer
+- Led Scrum ceremonies and sprint demos with US-based project managers in English
 
-## 🎓 Education & Certifications
+Tech: TypeScript · Angular · Grafana · k6
 
-*   **Bachelor of Computer Science** | [University Name]
-*   **Microsoft Certified: Azure Solutions Architect Expert**
-*   **Microsoft Certified: DevOps Engineer Expert (In Progress)**
+### Senior Software Engineer
+AtGames Cloud Holdings · Aug 2020 – Mar 2021 · Taipei, Taiwan
+- Developed and maintained frontend for Direct2Drive (web and mobile) and ArcadeNet across Angular, React, Vue, AngularJS, and React Native within a single role
+
+Tech: Angular · React · Vue · React Native · AngularJS
+
+### Senior Software Engineer
+Hwao Technology · May 2020 – Aug 2020 · Taipei, Taiwan
+- Built a full admin management system from scratch within the first month using Vue.js under tight delivery timelines
+
+Tech: Vue.js
+
+### Senior Frontend Developer
+Newegg · Jan 2019 – Apr 2020 · Taichung, Taiwan
+- Implemented chunked parallel download for cloud storage system with resume-on-failure and client-side reassembly, significantly improving upload/download performance
+- Built automated testing infrastructure with Selenium and TestNG, integrated into the daily development workflow
+- Shared knowledge across teams covering Angular, NSwag, Postman, and automated testing practices
+
+Tech: Angular · TypeScript · Selenium · TestNG
+
+### System Analyst
+Duotify · Aug 2018 – Nov 2018 · Taipei, Taiwan
+- Refactored bank application logic using .NET Web API and Angular; communicated directly with client stakeholders to clarify requirements
+- Conducted code reviews and acceptance testing; produced design specifications
+
+Tech: .NET Web API · Angular · .NET Core
+
+### Full Stack Developer
+Digiwin Software · May 2015 – Jul 2018 · Taiwan
+- Built E-Service, a new product developed end-to-end from requirements through release using Angular and .NET Web API
+- Led full UI modernization across the product line from legacy to flat design
+- Self-studied and trained teammates on Angular, Entity Framework, LINQ, and SOLID principles
+
+Tech: Angular · .NET Web API · SQL Server
+
+### Full Stack Developer
+Bestvisiontechnique · Nov 2014 – Apr 2015 · Taichung, Taiwan
+- Built AOI (Automated Optical Inspection) systems for manufacturing clients using Matrox Imaging Library and camera hardware APIs
+- Designed a shared camera library supporting multiple hardware types; deployed systems in cleanroom environments
+
+Tech: C# · WinForms · Matrox Imaging Library
+
+---
+
+## Entrepreneurship
+
+### Founder & Director
+SHOUTTA · Feb 2022 – Feb 2023
+- Founded and operated an online fashion retail business end-to-end
+- Built a custom internal system covering product catalog, order management, and inventory control
+- Managed budgeting, accounting, and financial reporting
+
+---
+
+## Certifications
+
+- Microsoft Certified: Azure DevOps Engineer Expert (AZ-400) ✅ · June 2026
+- Microsoft Certified: Azure Developer Associate (AZ-204) ✅ · April 2026
+- Microsoft Certified: Azure Administrator Associate (AZ-104) · June 2024 (Expired)
+- Microsoft Certified: Azure Fundamentals (AZ-900) ✅ · January 2024
+- Cardano Blockchain Certified Associate (CBCA) · October 2024
+
+---
+
+## Education
+
+**Bachelor of Information Management**
+National Yunlin University of Science and Technology · 2010 – 2014

@@ -1,26 +1,20 @@
 # CLAUDE.md - Claude Desktop Boot Sequence
 
-> Follow AGENTS.md protocols. This file adapts them for Claude Desktop sessions.
+> 完整協定見 `AGENTS.md`；persona 見 `SOUL.md`；Shawn 的背景見 `USER.md`。這份檔案只放 Claude Desktop 專屬的東西，不重複 AGENTS.md 已經寫過的內容。
 
-## 🚀 Boot Sequence (Every Session)
+## 🚀 Boot Sequence（每次新 session 開場執行）
 
-1. **Read `SOUL.md`** — Re-align with Shawn's Digital Twin persona and core principles.
-2. **Read `USER.md`** — Load Shawn's context: tech stack, goals, health, preferences, validation rules.
-3. **Read `memory/MEMORY.md`** — Access long-term strategic memory and curated decisions.
-4. **Read today's `daily/YYYY-MM-DD.md`** — Get up to speed on recent events (if exists).
+依序讀取，任何一個檔案不存在就跳過、不中斷：
+1. `SOUL.md`
+2. `USER.md`
+3. `memory/MEMORY.md`
+4. 今天的 `daily/YYYY-MM-DD.md`（如果存在）
 
-## 🧠 Memory Write Rules
+讀取過程不用逐項跟 Shawn 報告；讀完後直接以 SOUL.md 定義的 Digital Twin persona 自然開始對話，不用宣告「boot sequence 執行完畢」這類話。
 
-- **Long-term insights, decisions, facts** → update `memory/MEMORY.md` (surgical edits only)
-- **Daily logs, drafts, raw thoughts** → write to `daily/YYYY-MM-DD.md`
-- **Project strategy docs** → `projects/[project-name]/`
-- **Life/visa docs** → `life/visa/`
-- **Content drafts** → `content/Drafts/`
-- **Source code** → `repos/[repo-name]/` (each is an independent git repo)
+## ✍️ Memory Write Rules（Claude Desktop 專屬）
 
-## ⚡ Execution Style
-
-- Follow `SOUL.md`: Execution > Explanation. Report results, not intentions.
-- Be opinionated. Challenge weak ideas. Propose better ones.
-- Default language: English for docs/code. Chinese for contextual brainstorming.
-- Concise format: bullets, headers, code blocks.
+- 長期事實/決策 → 精確編輯 `memory/MEMORY.md`（surgical edits，不要整段覆寫）；內容如果已經完成或過期，搬到對應區塊或 `memory/archive/`，不要留著讓檔案肥回去
+- 深度策略／身份認同這類不用每次都讀的內容 → `memory/LIFE-ROADMAP.md`
+- 當天原始記錄、草稿、片段想法 → `daily/YYYY-MM-DD.md`
+- 其餘分類（project/life/content/repos）與 `AGENTS.md` 一致，不重複列於此
