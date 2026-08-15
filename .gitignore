@@ -1,4 +1,16 @@
-# Security & Privacy
+# ── HARD BLOCK: 個人資料一律不進公開 repo ──
+USER.md
+TOOLS.md
+HEARTBEAT.md
+BOOT.md
+Shawn.md
+memory/
+daily/
+life/
+ops/
+private/
+
+# Secrets
 .env
 .env.*
 !.env.example
@@ -6,21 +18,10 @@ auth-profiles.json
 *.key
 *.pem
 *.log
-id_rsa
-id_rsa.pub
+id_rsa*
 
-# Private content (tracked in openclaw-private repo)
-memory/
-daily/
-life/
-projects/
-
-# Source Code Repos (each has own git remote, managed independently)
+# Source repos（各自有 remote）
 repos/
-
-# Sensitive Root Files
-USER.md
-Shawn.md
 
 # OS & Editor
 .DS_Store
@@ -31,7 +32,3 @@ Shawn.md
 # Node
 node_modules/
 npm-debug.log
-
-# OpenClaw Specific
-openclaw.pid
-openclaw.sock

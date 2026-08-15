@@ -1,58 +1,58 @@
-# AGENTS.md - The Workspace Manual
+# AGENTS.md — Workspace Architecture
 
-> **Context:** This is your home directory. Treat it with respect.
+A two-repo, progressive-loading memory system for a long-running personal AI agent. The design goal is a **flat token cost per session regardless of how much the knowledge base grows**.
 
-## 🚀 Boot Sequence
+## The Problem
 
-1. **Read `SOUL.md`:** Re-align with core persona and mission.
-2. **Read `USER.md`:** Understand Shawn's context, goals, preferences, and constraints.
-3. **Read `memory/MEMORY.md`:** Access long-term strategic context (hot-path only — `LIFE-ROADMAP.md` and `archive/` are read on demand, not every boot).
-4. **Read today's daily note at `daily/[today's date].md`** if it exists.
-5. If any file is missing, skip it and continue — don't block the boot sequence on a missing file.
+Naive agent memory loads every context file at session start. As the knowledge base grows, every conversation — including "what's the weather" — pays for the full corpus. In this workspace the boot payload had reached 37KB, of which roughly 85% was reference material used a few times a month.
 
-## 🗂️ Directory Structure
+## The Design
+
+Three tiers, separated by **access frequency**, not by topic:
 
 ```
-openclaw/                          (public config — this repo)
-├── SOUL.md / USER.md / AGENTS.md / CLAUDE.md / TOOLS.md / HEARTBEAT.md / README.md
-├── content/              ← Articles, resume, content strategy
-├── projects/             ← Project strategy docs (not source code)
-├── life/                 ← Visa, travel, finance, identity
-├── knowledge/            ← Technical notes (future use)
-└── repos/                ← Source code repos (each independent git, fully gitignored)
-    ├── BuddyShopAI/
-    ├── LocalRAG/
-    ├── fluffyflint/
-    └── frontend/
-
-openclaw-private/                  (private, separate git repo)
-├── memory/
-│   ├── MEMORY.md         ← hot-path curated context, read every boot
-│   ├── LIFE-ROADMAP.md   ← 30yr strategy/identity deep-dives, read on demand
-│   └── archive/          ← completed one-off tasks (e.g. relocation log)
-├── daily/                ← Daily logs (YYYY-MM-DD.md)
-└── life/, projects/
+Tier 0  BOOT.md          ~4KB   every session
+Tier 1  memory/*.md      ~5-10KB each, loaded when a trigger word hits
+Tier 2  memory/archive/  never auto-loaded; historical record only
 ```
 
-> **2026-08 整理備註：** IDENTITY.md 已移除（內容跟 SOUL.md + TOOLS.md 重複，含過時的 model 版本），git 歷史仍可找回。CLAUDE.md 精簡為 AGENTS.md 的 Claude Desktop 專屬補充，不再重複整份 boot sequence。
+`BOOT.md` holds only what the agent would get *wrong* without it: current life state, active work, behavioral rules, and a **routing table** mapping conversation topics to Tier 1 files. Everything else is a lookup.
 
-## 🧠 Memory Protocol
+The routing table is the key mechanism. It costs ~600 bytes and replaces ~25KB of preloaded reference.
 
-- **Daily Logs:** `daily/YYYY-MM-DD.md` — raw events, thoughts, drafts
-- **Long-Term (hot path):** `memory/MEMORY.md` — curated insights, decisions, facts that matter *every* session
-- **Long-Term (on demand):** `memory/LIFE-ROADMAP.md` — 30yr strategy, travel, academic, identity content; pull it in when the conversation actually goes there
-- **Archive:** `memory/archive/` — completed, dated one-off tasks kept for reference, not re-read by default
-- **Rule:** Never rely on mental notes. Markdown is truth; chat is ephemeral. Keep MEMORY.md lean — if a section is done or expired, move it, don't leave it to rot.
+## Repo Split
 
-## ⚡ Execution Protocol
+```
+openclaw/            PUBLIC  — persona, architecture, portfolio content
+├── SOUL.md              persona and operating principles
+├── AGENTS.md            this file
+├── README.md
+├── content/             articles, resume, content strategy
+└── repos/               source code (gitignored, independent remotes)
 
-- **Issue-First:** Before writing code, define the task in a Markdown spec.
-- **Markdown is King:** All knowledge, decisions, specs must live in Markdown.
-- **Verify before reporting:** Check git log before claiming something was done.
+openclaw-private/    PRIVATE — everything personal
+├── BOOT.md              Tier 0: the only file loaded every session
+├── USER.md              background, on demand
+├── TOOLS.md             local environment config
+├── HEARTBEAT.md         proactive checks
+├── memory/              Tier 1 + Tier 2
+├── daily/               YYYY-MM-DD.md raw logs
+└── ops/                 automation scripts and maintenance protocols
+```
 
-## 🛡️ Security & Privacy
+The split rule is mechanical: **if a file contains a fact about a real person, it lives in private.** No judgement calls.
 
-- **Private zones:** `memory/`, `private/`, `.env` — never commit secrets
-- **Public zones:** `content/`, `knowledge/` — portfolio-safe
-- **Always check `.gitignore` before git operations**
-- **`repos/` is fully gitignored** — each repo manages its own remote
+## Protocols
+
+- **Write:** long-term facts → the matching `memory/` file, surgical edits only. Raw daily events → `daily/YYYY-MM-DD.md`. Expired content → `memory/archive/`.
+- **Meditation:** a scheduled refinement pass that re-sorts content between tiers and prunes decayed facts. See `ops/MEDITATION.md`.
+- **Sync:** both repos push daily via `ops/daily-push.sh`.
+- **Security:** the public `.gitignore` hard-blocks every private filename by name, not just by directory.
+
+## Results
+
+| | Before | After |
+|---|---|---|
+| Boot payload | 37.2 KB | ~6 KB |
+| Files read at boot | 4 | 2 |
+| Reference material preloaded | ~25 KB | 0 |

@@ -1,42 +1,21 @@
-# OpenClaw — Shawn's Digital Twin Workspace
+# OpenClaw
 
-Personal AI workspace and knowledge base for Shawn Tseng（曾季暘）。
+A progressive-loading memory architecture for a long-running personal AI agent, built on Claude Desktop + MCP.
 
-## Structure
+Most personal-agent setups load their entire context file set on every session. That works until the knowledge base outgrows the budget — then every trivial exchange pays for the full corpus. OpenClaw separates context by **access frequency** instead of topic, and routes the rest in on demand.
 
-```
-openclaw/                     (this repo — public config)
-├── SOUL.md          — AI persona and principles
-├── USER.md          — Shawn's context, preferences, validation rules
-├── AGENTS.md        — Directory structure, boot sequence, memory protocol
-├── CLAUDE.md        — Claude Desktop-specific supplement to AGENTS.md
-├── TOOLS.md         — Local machine config (model version, credentials, editor prefs)
-├── HEARTBEAT.md     — Proactive checks to run at session start
-├── content/         — Articles, resume, content strategy
-├── projects/        — Project strategy docs
-├── life/            — Visa, travel, finance
-├── knowledge/       — Technical notes
-└── repos/           — Source code (gitignored, each has own remote)
-    ├── BuddyShopAI  → github.com/ShawnTseng/BuddyShopAI
-    ├── LocalRAG     → github.com/ShawnTseng/LocalRAG
-    ├── fluffyflint  → github.com/ShawnTseng/fluffyflint
-    └── frontend     → github.com/sovx-dev/frontend
+Boot payload went from 37KB to roughly 6KB with no loss of recall.
 
-openclaw-private/              (separate git repo — private)
-├── memory/
-│   ├── MEMORY.md         — hot-path long-term memory, read every boot
-│   ├── LIFE-ROADMAP.md   — 30yr strategy/identity deep-dives, read on demand
-│   ├── cron-reference.md, honami.md
-│   └── archive/          — completed one-off tasks
-├── daily/           — Daily logs (YYYY-MM-DD.md)
-└── life/, projects/
-```
+- **[AGENTS.md](AGENTS.md)** — the architecture, tier model, and routing mechanism
+- **[SOUL.md](SOUL.md)** — persona and operating principles
+- **[content/](content/)** — writing and content strategy
 
-## Active Projects
+Personal data lives in a separate private repository. This one is config, architecture, and portfolio content only.
 
-- **BuddyShopAI** — LINE AI customer service, live since 2026-03-20
-- **AZ-305** — Starting 2026-04-01（⚠️ 沒出現在 MEMORY.md 的證照清單裡，狀態待確認——完成了、放棄了，還是被 AZ-400 取代了？）
+## Stack
 
-## Tech Stack
+Claude Desktop · MCP (filesystem + shell) · Markdown as the only datastore · git as the only sync layer
 
-Claude Desktop (primary AI) · .NET 8 · Azure · React · TypeScript · Bicep IaC
+---
+
+Built by [Shawn Tseng](https://github.com/ShawnTseng) — .NET / Azure engineer, Melbourne.
