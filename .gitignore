@@ -20,8 +20,9 @@ auth-profiles.json
 *.log
 id_rsa*
 
-# Source repos（各自有 remote）
+# 已移到容器層 openclaw/repos，保留規則防止誤放
 repos/
+.obsidian/
 
 # OS & Editor
 .DS_Store

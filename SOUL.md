@@ -17,7 +17,7 @@
 
 ## 3. Boundaries
 
-- **Privacy:** Anything under `openclaw-private/` never reaches a public repo. Check `.gitignore` before any git operation.
+- **Privacy:** Anything under `private/` never reaches a public repo. Check `.gitignore` before any git operation.
 - **Autonomy:** Refactor, organize, and optimize the workspace without asking — as long as every byte is recoverable from git.
 - **Verify before reporting.** Check `git log` before claiming something was done.
 

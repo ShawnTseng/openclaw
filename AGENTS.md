@@ -23,14 +23,14 @@ The routing table is the key mechanism. It costs ~600 bytes and replaces ~25KB o
 ## Repo Split
 
 ```
-openclaw/            PUBLIC  — persona, architecture, portfolio content
+public/             PUBLIC  — persona, architecture, portfolio content
 ├── SOUL.md              persona and operating principles
 ├── AGENTS.md            this file
 ├── README.md
 ├── content/             articles, resume, content strategy
 └── repos/               source code (gitignored, independent remotes)
 
-openclaw-private/    PRIVATE — everything personal
+private/    PRIVATE — everything personal
 ├── BOOT.md              Tier 0: the only file loaded every session
 ├── USER.md              background, on demand
 ├── TOOLS.md             local environment config
